@@ -2,16 +2,29 @@ import React from 'react';
 import RoomCode from '../components/RoomCode.jsx';
 import QRCode from '../components/QRcode.jsx';
 import PlayersList from '../components/PlayersList.jsx';
+import NumOfLiarControl from '../components/NumOfLiarControl.jsx';
 import Button from '../components/button.jsx';
 
-const LobbyPage = ({ roomCode, players, isHost, onReady, onCopyCode, copied, onLeave }) => {
+// pages/LobbyPage.jsx
+// Purpose: Show room information and connected players.
+// Props:
+//  - roomCode: string (6-char code for this room)
+//  - players: array of {id,name,isHost}
+//  - isHost: boolean - enables host-only actions
+//  - onReady: host action to advance to category selection
+//  - onCopyCode: copy room code to clipboard
+//  - copied: visual feedback flag
+//  - onLeave: leave the lobby and reset local state
+const LobbyPage = ({ roomCode, players, isHost, onReady, onCopyCode, copied, onLeave, numLiars, setNumLiars }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 p-8">
       <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Game Lobby</h2>
-        
+
   <RoomCode code={roomCode} onCopy={onCopyCode} copied={copied} />
   <QRCode code={roomCode} />
+
+  <NumOfLiarControl numLiars={numLiars} setNumLiars={setNumLiars} players={players} isHost={isHost} />
+
         <PlayersList players={players} />
 
         {isHost ? (

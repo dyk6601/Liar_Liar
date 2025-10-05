@@ -1,4 +1,12 @@
 // pages/CategoryPage.jsx
+// Purpose: Let the host pick a word category before the round starts.
+// Props:
+//  - categories: array of category keys (strings)
+//  - selectedCategory: currently selected key
+//  - onSelectCategory(key): setter called when a card is chosen
+//  - onStartGame(): starts the game once a category is chosen
+// UX note: Category selection is single-choice; CategoryCard receives the
+// `isSelected` flag and should visually communicate selection clearly.
 import React from 'react';
 import CategoryCard from '../components/CategoryCard.jsx';
 import Button from '../components/button.jsx';

@@ -1,4 +1,7 @@
 // components/CategoryCard.jsx
+// components/CategoryCard.jsx
+// Single selectable category tile. Parent controls `isSelected` state.
+// Props: category (string), isSelected (bool), onSelect(category)
 const CategoryCard = ({ category, isSelected, onSelect }) => {
   return (
     <button

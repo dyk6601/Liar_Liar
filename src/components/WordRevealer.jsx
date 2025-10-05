@@ -1,4 +1,7 @@
 // components/WordRevealer.jsx
+// Presents the secret word to the user. Clicking toggles reveal state.
+// Keep the reveal logic simple to allow the parent to control who sees the
+// word (server-side selection is recommended in real apps).
 import React from 'react';
 
 const WordRevealer = ({ word, isRevealed, onToggle }) => {

@@ -1,6 +1,10 @@
 import React from 'react';
 import { UsersIcon, CrownIcon } from './icons.jsx';
 
+// components/PlayersList.jsx
+// Renders a simple list of players. Expects `players` to be an array of
+// objects: { id: number|string, name: string, isHost?: boolean }
+// Parent component controls player ordering and membership.
 const PlayersList = ({ players }) => {
   return (
     <div className="mb-6">

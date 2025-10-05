@@ -1,6 +1,11 @@
 import Button from '../components/button.jsx';
 
 // pages/HomePage.jsx
+// Purpose: Landing page and entry point for new or returning players.
+// Props:
+//  - onStartNewGame(): called when the host flow should start
+//  - onJoinGame(): called when a player wants to join an existing room
+// Notes: Keep this page purely presentational. Game state lives in `src/App.js`.
 const HomePage = ({ onStartNewGame, onJoinGame }) => {
   return (
   <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">

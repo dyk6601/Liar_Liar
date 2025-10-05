@@ -1,7 +1,13 @@
 // pages/GamePage.jsx
+// Purpose: Display the selected category and the secret word for the current user.
+// Notes:
+//  - `userWord` contains the word shown to the current client only.
+//  - In a multi-user environment, selecting the liar and word should be performed
+//    server-side to avoid leaking information client-side.
 import React from 'react';
 import WordRevealer from '../components/WordRevealer.jsx';
 import Button from '../components/button.jsx';
+import Tips from '../components/Tips.jsx';
 
 const GamePage = ({ userWord, wordRevealed, onToggleWord, isHost, onPlayAgain, onExitGame, selectedCategory }) => {
   return (
@@ -13,10 +19,9 @@ const GamePage = ({ userWord, wordRevealed, onToggleWord, isHost, onPlayAgain, o
           
           <WordRevealer word={userWord} isRevealed={wordRevealed} onToggle={onToggleWord} />
 
-          <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-6">
-            <p className="text-blue-800 text-center font-medium">
-              Remember your word and give clues !
-            </p>
+          <div className="mb-6">
+            {/* Tips component: shows a random tip each time the user's word changes */}
+            <Tips trigger={userWord} />
           </div>
 
           <div className="space-y-3">

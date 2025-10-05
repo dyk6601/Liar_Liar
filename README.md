@@ -4,6 +4,9 @@ A small multiplayer party game web app built with React. Players join a room, pi
 
 This repository contains the frontend for the game, implemented with Create React App and a small set of custom components and utilities.
 
+## Static Webiste URL
+https://amitheliar.vercel.app/
+
 ## Features
 
 - Create or join a room using a short room code.

@@ -1,6 +1,9 @@
 import React from 'react';
 
 // components/Input.jsx
+// Minimal text input used throughout the app. It intentionally forwards
+// `...rest` so callers can add aria-* attributes, maxLength, type overrides, etc.
+// Props: placeholder, value, onChange, className, ...rest
 const Input = ({ placeholder, value, onChange, className = '', ...rest }) => {
   return (
     <input

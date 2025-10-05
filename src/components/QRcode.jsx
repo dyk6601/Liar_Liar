@@ -2,7 +2,12 @@
 import React, { useState } from 'react';
 import { CopyIcon, CheckIcon } from './icons.jsx';
 
-// QRCode component - generates a QR image (via Google Charts API) for the room join URL
+// components/QRcode.jsx
+// Generates a QR image (via Google Charts API) for the room join URL.
+// Notes:
+//  - The QR image is a simple convenience for demos and uses a public
+//    image endpoint. For production, consider server-side generation or
+//    an SVG generator to avoid third-party dependencies.
 const QRCode = ({ code, size = 200 }) => {
   const [copied, setCopied] = useState(false);
 

@@ -1,4 +1,9 @@
 // components/NicknameModal.jsx
+// Purpose: Collect the player's display name and (for joiners) a room code.
+// Key notes:
+//  - This component sanitizes the room code to uppercase alphanumeric and
+//    enforces a 6-character length. Keep UI validation here for fast feedback,
+//    but enforce server-side in a real app.
 import React, { useState, useEffect } from 'react';
 import Modal from './modal.jsx';
 import Input from './input.jsx';

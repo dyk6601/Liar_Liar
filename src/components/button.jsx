@@ -1,5 +1,13 @@
 import React from 'react';
 
+// components/Button.jsx
+// Small presentational button with a `variant` map for quick styling.
+// Keep logic minimal here; prefer to alter variants or pass `className` for
+// one-off customizations. Variants rely on Tailwind classes.
+// Props:
+//  - variant: 'primary' | 'secondary' | 'success' | 'danger' | 'outline'
+//  - className: string - appended to the computed class list
+//  - disabled: boolean - disables interaction and applies visual state
 const Button = ({ children, onClick, variant = 'primary', className = '', disabled = false }) => {
   const variants = {
     primary: 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white',
