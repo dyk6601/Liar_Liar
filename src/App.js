@@ -110,14 +110,44 @@ export default function LiarWordGame() {
     
     const channel = gameService.subscribeToRoom(currentRoomId, {
       onPlayerChange: async (payload) => {
-        console.log('🔔 Player changed:', payload);
+        console.log('🔔 Player changed (payload):', payload);
+
         try {
-          // Refresh player list from database
-          const { players: updatedPlayers } = await gameService.getRoomData(currentRoomId);
-          console.log('✅ Updated players list:', updatedPlayers);
-          setPlayers(updatedPlayers);
+          // Supabase payload shapes may vary depending on client version.
+          // Common shapes: { new, old } or { record } or { record: { id, ... } }
+          const newRow = payload?.new ?? payload?.record ?? null;
+          const oldRow = payload?.old ?? null;
+
+          setPlayers((prev = []) => {
+            const list = Array.isArray(prev) ? [...prev] : [];
+
+            // INSERT (no oldRow)
+            if (newRow && !oldRow) {
+              if (list.find(p => String(p.id) === String(newRow.id))) return list;
+              return [...list, newRow];
+            }
+
+            // UPDATE
+            if (newRow && oldRow) {
+              return list.map(p => (String(p.id) === String(newRow.id) ? newRow : p));
+            }
+
+            // DELETE
+            if (oldRow && !newRow) {
+              return list.filter(p => String(p.id) !== String(oldRow.id));
+            }
+
+            return list;
+          });
+
+          // Safety net: if payload has no record information, refresh full list
+          if (!payload?.new && !payload?.old && !payload?.record) {
+            const { players: updatedPlayers } = await gameService.getRoomData(currentRoomId);
+            console.log('✅ Fallback refreshed players list:', updatedPlayers);
+            setPlayers(updatedPlayers);
+          }
         } catch (error) {
-          console.error('❌ Error refreshing players:', error);
+          console.error('❌ Error handling player change:', error);
         }
       },
       onRoomUpdate: (payload) => {
