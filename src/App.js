@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 // Import gameService for Supabase integration
 import gameService from './utils/gameService';
 
-// Keep your existing helper imports
+// helper imports
 import { copyToClipboard } from './utils/helper';
 import { WORD_CATEGORIES } from './data/categories';
 
-// Your existing page imports
+//  page imports
 import HomePage from './pages/HomePage.jsx';
 import LobbyPage from './pages/LobbyPage.jsx';
 import CategoryPage from './pages/CategoryPage.jsx';
@@ -22,7 +22,7 @@ export default function LiarWordGame() {
   const [isHost, setIsHost] = useState(false);
   const [roomCode, setRoomCode] = useState('');
   
-  // ✅ ADD THESE: Supabase-specific state
+  // Supabase-specific state
   const [roomId, setRoomId] = useState('');
   const [playerId, setPlayerId] = useState('');
   const [realtimeChannel, setRealtimeChannel] = useState(null);
@@ -47,14 +47,14 @@ export default function LiarWordGame() {
     setIsHost(false);
   };
 
-  // ✅ UPDATED: Now saves to Supabase
+  // Save to Supabase
   const handleNicknameSubmit = async ({ nickname, roomCode: inputRoomCode }) => {
     console.log('📝 Nickname submitted:', { nickname, isHost, inputRoomCode });
     setLoading(true);
     
     try {
       if (isHost) {
-        // ✅ CREATE ROOM in Supabase
+        // CREATE ROOM in Supabase
         console.log('🏠 Creating room in Supabase...');
         const { room, player } = await gameService.createRoom(nickname);
         
@@ -75,7 +75,7 @@ export default function LiarWordGame() {
         subscribeToRoom(room.id);
         
       } else {
-        // ✅ JOIN ROOM in Supabase
+        //  JOIN ROOM in Supabase
         console.log('🚪 Joining room in Supabase...');
         const { room, player } = await gameService.joinRoom(inputRoomCode, nickname);
         
@@ -104,16 +104,21 @@ export default function LiarWordGame() {
     }
   };
 
-  // ✅ NEW: Subscribe to real-time updates
-  const subscribeToRoom = (roomId) => {
-    console.log('🔔 Subscribing to room updates:', roomId);
+  // Subscribe to real-time updates
+  const subscribeToRoom = (currentRoomId) => {
+    console.log('🔔 Subscribing to room updates:', currentRoomId);
     
-    const channel = gameService.subscribeToRoom(roomId, {
+    const channel = gameService.subscribeToRoom(currentRoomId, {
       onPlayerChange: async (payload) => {
         console.log('🔔 Player changed:', payload);
-        // Refresh player list
-        const { players: updatedPlayers } = await gameService.getRoomData(roomId);
-        setPlayers(updatedPlayers);
+        try {
+          // Refresh player list from database
+          const { players: updatedPlayers } = await gameService.getRoomData(currentRoomId);
+          console.log('✅ Updated players list:', updatedPlayers);
+          setPlayers(updatedPlayers);
+        } catch (error) {
+          console.error('❌ Error refreshing players:', error);
+        }
       },
       onRoomUpdate: (payload) => {
         console.log('🔔 Room updated:', payload);
