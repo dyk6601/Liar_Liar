@@ -1,0 +1,20 @@
+// components/WordRevealer.jsx
+import React from 'react';
+
+const WordRevealer = ({ word, isRevealed, onToggle }) => {
+  return (
+    <div
+      onClick={onToggle}
+      className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-12 mb-8 cursor-pointer transition-all transform hover:scale-105 active:scale-95 min-h-[300px] flex items-center justify-center"
+    >
+      {isRevealed ? (
+        <p className="text-6xl font-bold text-white text-center drop-shadow-lg">{word}</p>
+      ) : (
+        <p className="text-2xl font-semibold text-white text-center">
+          👆 Tap to Reveal<br/>
+        </p>
+      )}
+    </div>
+  );
+};
+export default WordRevealer;

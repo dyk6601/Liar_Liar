@@ -1,3 +1,17 @@
+/* src/index.css */
+
+/* Tailwind CSS Directives - MUST be at the top */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +19,165 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Ensure page background matches dark UI to avoid white gap on overscroll */
+html, body, #root {
+  background-color: #111827; /* same as tailwind bg-gray-900 */
+  height: 100%;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a855f7;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9333ea;
+}
+
+/* Smooth Transitions */
+button {
+  transition: all 0.2s ease;
+}
+
+/* Prevent text selection on buttons */
+button {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Animation for modals */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Utility Classes */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Fallback modal styles (used when Tailwind isn't available) */
+.ll-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.ll-modal-content {
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  max-width: 480px;
+  width: 100%;
+  max-height: 72vh;
+  overflow-y: auto;
+  animation: fadeIn 160ms ease-out;
+}
+
+.ll-modal-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1rem;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.ll-modal-body { padding: 1rem; max-height: calc(72vh - 84px); overflow-y: auto; }
+
+.ll-close-button { background: transparent; border: none; cursor: pointer; }
+
+/* Theme variables */
+:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #7c3aed; /* purple */
+  --accent-2: #ec4899; /* pink */
+  --success: #10b981;
+  --danger: #ef4444;
+}
+
+/* Basic layout helper */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(17, 24, 39, 0.06);
+  padding: 1rem;
+}
+
+/* Buttons (fallback) */
+.btn {
+  display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1rem;border-radius:10px;border:0;cursor:pointer;font-weight:600;
+}
+.btn-primary { background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: white; }
+.btn-secondary { background: linear-gradient(90deg,#3b82f6,#06b6d4); color: white; }
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform:none; }
+
+/* Inputs */
+.input {
+  width:100%;padding:0.75rem 1rem;border-radius:10px;border:2px solid #e5e7eb;background:#fff;outline:none;font-size:1rem;
+}
+.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,0.08); }
+
+/* Headings */
+h1, .h1 { font-size:2.5rem; font-weight:800; color:#111827; }
+h2, .h2 { font-size:1.75rem; font-weight:700; color:#111827; }
+
+/* Small helpers */
+.muted { color: var(--muted); }
+.center { text-align:center; }
+
+/* Responsive tweaks */
+@media (min-width: 768px) {
+  .grid-3 { display:grid; grid-template-columns: repeat(3,1fr); gap:1rem; }
+  .grid-2 { display:grid; grid-template-columns: repeat(2,1fr); gap:1rem; }
+}
+
+/* Make sure modal keeps padding on very small screens */
+@media (max-width: 420px) {
+  .ll-modal-content { margin: 0 0.5rem; }
 }

@@ -1,70 +1,65 @@
-# Getting Started with Create React App
+# Liar Liar
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A small multiplayer party game web app built with React. Players join a room, pick nicknames, and play a social deduction-style game where one player is the liar and others try to spot them.
 
-## Available Scripts
+This repository contains the frontend for the game, implemented with Create React App and a small set of custom components and utilities.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- Create or join a room using a short room code.
+- Pick a nickname before entering the game.
+- Host controls to start the game and manage rounds.
+- Simple modal-based UI for nickname entry, rules, and room actions.
+- Lightweight UI components: buttons, inputs, icons, and modals.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Tech stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React 19 (Create React App)
+- Tailwind-like utility classes for quick styling (project uses utility class names in JSX)
+- Optional: Supabase utils are included in `src/utils/supabase.js` for backend integration
 
-### `npm test`
+## Project structure (important files)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `src/App.js` — main app container.
+- `src/index.js` — React entrypoint.
+- `src/components/` — UI components used across the app:
+	- `NicknameModal.jsx` — modal to choose nickname and enter room code.
+	- `RulesModal.jsx` — displays game rules.
+	- `modal.jsx`, `input.jsx`, `button.jsx`, `icons.jsx` — small reusable components.
+- `src/data/categories.js` — sample data for in-game categories.
+- `src/utils/helper.js` — utility helper functions.
+- `src/utils/supabase.js` — (optional) supabase setup for realtime/DB.
 
-### `npm run build`
+## Running locally
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Prerequisites: Node.js 18+ and npm.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Install dependencies:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+```
 
-### `npm run eject`
+2. Start the dev server:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Open http://localhost:3000 in your browser.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Notes for further work
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Backend: integrate Supabase (or another realtime backend) to manage rooms, players, and game state.
+- Validation: improve form validation and show helpful error messages.
+- Styling: wire Tailwind or a CSS framework for consistent styling. Right now the project uses utility-like class names in components.
+- Tests: add unit and integration tests for components and game logic.
 
-## Learn More
+## Contributing
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Contributions welcome. Open issues or PRs for features or bug fixes.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## License
 
-### Code Splitting
+This project is provided as-is. Add a LICENSE file if you plan to open-source it.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
