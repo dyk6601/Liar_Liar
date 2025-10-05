@@ -13,7 +13,7 @@ const GamePage = ({ userWord, wordRevealed, onToggleWord, isHost, onPlayAgain, o
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-400 via-red-400 to-pink-400 p-8">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+  <div className="bg-white rounded-2xl shadow-2xl p-8 w-[calc(100vw-2rem)] max-w-2xl mx-auto">
           <p className="text-3xl text-gray-800 mb-2 text-center">Category</p>
           <h2 className="text-xl font-bold text-gray-600 mb-6 text-center">{selectedCategory || '—'}</h2>
           
