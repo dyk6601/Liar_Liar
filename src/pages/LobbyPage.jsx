@@ -23,7 +23,9 @@ const LobbyPage = ({ roomCode, players, isHost, onReady, onCopyCode, copied, onL
   <RoomCode code={roomCode} onCopy={onCopyCode} copied={copied} />
   <QRCode code={roomCode} />
 
-  <NumOfLiarControl numLiars={numLiars} setNumLiars={setNumLiars} players={players} isHost={isHost} />
+  {isHost && (
+    <NumOfLiarControl numLiars={numLiars} setNumLiars={setNumLiars} players={players} isHost={isHost} />
+  )}
 
         <PlayersList players={players} />
 

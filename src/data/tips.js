@@ -10,9 +10,8 @@ const TIPS = [
   "Don't volunteer extra information—answer succinctly.",
   "Watch body language and hesitation when others speak.",
   "Tie your clues to common experiences (e.g., 'kitchen', 'travel') to narrow options.",
-  "If unsure, ask follow-up clarifying questions rather than making wild guesses.",
-  "Rotate who gives clues each round to keep the game fair and fun.",
-  "Use contrasts (opposites) to steer others away from the real word if you're lying."
+  "Rotate who gives the clue first each round",
+  "Play the man not odds"
 ];
 
 export default TIPS;
