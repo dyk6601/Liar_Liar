@@ -259,6 +259,7 @@ const gameService = {
   // 5. REAL-TIME SUBSCRIPTIONS
   // ==========================================
   subscribeToRoom(roomId, callbacks) {
+    console.log('🔔 gameService.subscribeToRoom called for room:', roomId);
     const channel = supabase
       .channel(`room:${roomId}`)
       .on(
@@ -270,9 +271,17 @@ const gameService = {
           filter: `room_id=eq.${roomId}`
         },
         (payload) => {
-          console.log('🔔 Player change:', payload);
+          // Normalize payload shape for consumers (some clients use `record`, others `new`)
+          const normalized = {
+            type: payload?.event || payload?.eventType || payload?.type || payload?.eventName || null,
+            new: payload?.new ?? payload?.record ?? null,
+            old: payload?.old ?? null,
+            raw: payload
+          };
+
+          console.log('🔔 Player change (normalized):', normalized);
           if (callbacks.onPlayerChange) {
-            callbacks.onPlayerChange(payload);
+            callbacks.onPlayerChange(normalized);
           }
         }
       )
@@ -292,7 +301,29 @@ const gameService = {
         }
       )
       .subscribe();
-    
+
+    console.log('🔔 gameService.subscribeToRoom subscribed channel:', channel);
+
+    // Monitor channel state until it becomes 'joined' or errors
+    try {
+      const checkInterval = setInterval(() => {
+        try {
+          const state = channel?.state;
+          console.log(`🔍 channel state for room ${roomId}:`, state);
+
+          if (state === 'joined') {
+            console.log(`✅ Realtime channel joined for room ${roomId}`);
+            clearInterval(checkInterval);
+          }
+        } catch (err) {
+          console.error('❌ Error reading channel state:', err);
+          clearInterval(checkInterval);
+        }
+      }, 500);
+    } catch (err) {
+      console.error('❌ Failed to monitor channel state:', err);
+    }
+
     return channel;
   },
   

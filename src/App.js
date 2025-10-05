@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // Import gameService for Supabase integration
 import gameService from './utils/gameService';
@@ -25,7 +25,7 @@ export default function LiarWordGame() {
   // Supabase-specific state
   const [roomId, setRoomId] = useState('');
   const [playerId, setPlayerId] = useState('');
-  const [realtimeChannel, setRealtimeChannel] = useState(null);
+  const realtimeChannelRef = useRef(null);
   
   const [players, setPlayers] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -106,64 +106,41 @@ export default function LiarWordGame() {
 
   // Subscribe to real-time updates
   const subscribeToRoom = (currentRoomId) => {
-    console.log('🔔 Subscribing to room updates:', currentRoomId);
-    
     const channel = gameService.subscribeToRoom(currentRoomId, {
-      onPlayerChange: async (payload) => {
-        console.log('🔔 Player changed (payload):', payload);
+      onPlayerChange: (normalized) => {
+        // normalized: { type, new, old, raw }
+        const { type, new: newRow, old: oldRow } = normalized;
 
-        try {
-          // Supabase payload shapes may vary depending on client version.
-          // Common shapes: { new, old } or { record } or { record: { id, ... } }
-          const newRow = payload?.new ?? payload?.record ?? null;
-          const oldRow = payload?.old ?? null;
+        setPlayers((prev = []) => {
+          const list = Array.isArray(prev) ? [...prev] : [];
 
-          setPlayers((prev = []) => {
-            const list = Array.isArray(prev) ? [...prev] : [];
-
-            // INSERT (no oldRow)
-            if (newRow && !oldRow) {
-              if (list.find(p => String(p.id) === String(newRow.id))) return list;
-              return [...list, newRow];
-            }
-
-            // UPDATE
-            if (newRow && oldRow) {
-              return list.map(p => (String(p.id) === String(newRow.id) ? newRow : p));
-            }
-
-            // DELETE
-            if (oldRow && !newRow) {
-              return list.filter(p => String(p.id) !== String(oldRow.id));
-            }
-
+          if ((type === 'INSERT' || type === 'insert') && newRow) {
+            if (!list.find(p => String(p.id) === String(newRow.id))) return [...list, newRow];
             return list;
-          });
-
-          // Safety net: if payload has no record information, refresh full list
-          if (!payload?.new && !payload?.old && !payload?.record) {
-            const { players: updatedPlayers } = await gameService.getRoomData(currentRoomId);
-            console.log('✅ Fallback refreshed players list:', updatedPlayers);
-            setPlayers(updatedPlayers);
           }
-        } catch (error) {
-          console.error('❌ Error handling player change:', error);
-        }
+
+          if ((type === 'UPDATE' || type === 'update') && newRow) {
+            return list.map(p => (String(p.id) === String(newRow.id) ? newRow : p));
+          }
+
+          if ((type === 'DELETE' || type === 'delete') && oldRow) {
+            return list.filter(p => String(p.id) !== String(oldRow.id));
+          }
+
+          return list;
+        });
       },
       onRoomUpdate: (payload) => {
-        console.log('🔔 Room updated:', payload);
-        // Handle room status changes if needed
-        if (payload.new?.status === 'in_game') {
-          // Game started, refresh word assignment
+        if (payload?.new?.status === 'in_game') {
           gameService.getPlayerWord(playerId).then(({ assigned_word }) => {
             setUserWord(assigned_word);
             setPage('game');
-          });
+          }).catch(() => {});
         }
       }
     });
-    
-    setRealtimeChannel(channel);
+
+    realtimeChannelRef.current = channel;
   };
 
   const handleCopyCode = async () => {
@@ -220,8 +197,9 @@ export default function LiarWordGame() {
       }
       
       // Unsubscribe from real-time updates
-      if (realtimeChannel) {
-        gameService.unsubscribeFromRoom(realtimeChannel);
+      if (realtimeChannelRef.current) {
+        gameService.unsubscribeFromRoom(realtimeChannelRef.current);
+        realtimeChannelRef.current = null;
       }
       
       // Reset all state
@@ -273,8 +251,9 @@ export default function LiarWordGame() {
   // ✅ NEW: Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (realtimeChannel) {
-        gameService.unsubscribeFromRoom(realtimeChannel);
+      if (realtimeChannelRef.current) {
+        gameService.unsubscribeFromRoom(realtimeChannelRef.current);
+        realtimeChannelRef.current = null;
       }
     };
   }, [realtimeChannel]);
