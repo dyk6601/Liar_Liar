@@ -267,6 +267,8 @@ const gameService = {
       'postgres_changes',
       { event: 'INSERT', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
       (payload) => {
+        console.log('🔔 RAW Player INSERT payload:', payload);
+        
         // Normalize payload shape for consumers (some clients use `record`, others `new`)
         const normalized = {
           type: 'INSERT',
@@ -335,7 +337,12 @@ const gameService = {
     );
 
     // Subscribe to the channel
-    channel.subscribe();
+    channel.subscribe((status) => {
+      console.log('🔔 Subscription status:', status);
+      if (status === 'SUBSCRIBED') {
+        console.log('✅ Successfully subscribed to real-time updates for room:', roomId);
+      }
+    });
 
     console.log('🔔 gameService.subscribeToRoom subscribed channel:', channel);
 
