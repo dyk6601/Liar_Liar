@@ -1,5 +1,5 @@
 // src/components/Tips.jsx
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import TIPS from '../data/tips';
 
 // Tips component that shows a single helpful tip. When the `trigger` prop

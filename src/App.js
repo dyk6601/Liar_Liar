@@ -256,7 +256,7 @@ export default function LiarWordGame() {
         realtimeChannelRef.current = null;
       }
     };
-  }, [realtimeChannel]);
+  }, []);
 
   return (
     <>

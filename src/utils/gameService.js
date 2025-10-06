@@ -145,8 +145,8 @@ const gameService = {
       
       if (playersError) throw playersError;
       
-      if (players.length < 3) {
-        throw new Error('Need at least 3 players to start');
+      if (players.length < 1) {
+        throw new Error('Need at least 1 player to start');
       }
       
       // Select random word pair
@@ -258,49 +258,84 @@ const gameService = {
   // ==========================================
   // 5. REAL-TIME SUBSCRIPTIONS
   // ==========================================
-  subscribeToRoom(roomId, callbacks) {
+  subscribeToRoom(roomId, callbacks = {}) {
     console.log('🔔 gameService.subscribeToRoom called for room:', roomId);
-    const channel = supabase
-      .channel(`room:${roomId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'players',
-          filter: `room_id=eq.${roomId}`
-        },
-        (payload) => {
-          // Normalize payload shape for consumers (some clients use `record`, others `new`)
-          const normalized = {
-            type: payload?.event || payload?.eventType || payload?.type || payload?.eventName || null,
-            new: payload?.new ?? payload?.record ?? null,
-            old: payload?.old ?? null,
-            raw: payload
-          };
+    const channel = supabase.channel(`room:${roomId}`);
 
-          console.log('🔔 Player change (normalized):', normalized);
-          if (callbacks.onPlayerChange) {
-            callbacks.onPlayerChange(normalized);
-          }
+    // Listen for player INSERT events
+    channel.on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
+      (payload) => {
+        // Normalize payload shape for consumers (some clients use `record`, others `new`)
+        const normalized = {
+          type: 'INSERT',
+          new: payload?.new ?? payload?.record ?? null,
+          old: null,
+          raw: payload
+        };
+        
+        console.log('🔔 Player INSERT (normalized):', normalized);
+        if (callbacks.onPlayerChange) {
+          callbacks.onPlayerChange(normalized);
         }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'rooms',
-          filter: `id=eq.${roomId}`
-        },
-        (payload) => {
-          console.log('🔔 Room update:', payload);
-          if (callbacks.onRoomUpdate) {
-            callbacks.onRoomUpdate(payload);
-          }
+      }
+    );
+
+    // Listen for player UPDATE events
+    channel.on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
+      (payload) => {
+        // Normalize payload shape for consumers
+        const normalized = {
+          type: 'UPDATE',
+          new: payload?.new ?? payload?.record ?? null,
+          old: payload?.old ?? null,
+          raw: payload
+        };
+        
+        console.log('🔔 Player UPDATE (normalized):', normalized);
+        if (callbacks.onPlayerChange) {
+          callbacks.onPlayerChange(normalized);
         }
-      )
-      .subscribe();
+      }
+    );
+
+    // Listen for player DELETE events
+    channel.on(
+      'postgres_changes',
+      { event: 'DELETE', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
+      (payload) => {
+        // Normalize payload shape for consumers
+        const normalized = {
+          type: 'DELETE',
+          new: null,
+          old: payload?.old ?? null,
+          raw: payload
+        };
+        
+        console.log('🔔 Player DELETE (normalized):', normalized);
+        if (callbacks.onPlayerChange) {
+          callbacks.onPlayerChange(normalized);
+        }
+      }
+    );
+
+    // Listen for room UPDATE events
+    channel.on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}` },
+      (payload) => {
+        console.log('🔔 Room update:', payload);
+        if (callbacks.onRoomUpdate) {
+          callbacks.onRoomUpdate(payload);
+        }
+      }
+    );
+
+    // Subscribe to the channel
+    channel.subscribe();
 
     console.log('🔔 gameService.subscribeToRoom subscribed channel:', channel);
 
