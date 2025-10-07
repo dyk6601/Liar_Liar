@@ -64,15 +64,20 @@ export default function LiarWordGame() {
         setRoomCode(room.room_code);
         setRoomId(room.id);
         setPlayerId(player.id);
-        setPlayers([player]);
-        setPage('lobby');
-        setShowNicknameModal(false);
+        
+        // Get all players first (should just be the host)
+        const { players: allPlayers } = await gameService.getRoomData(room.id);
+        console.log('📊 Initial players:', allPlayers);
+        setPlayers(allPlayers);
+        
+        // Subscribe to real-time updates BEFORE changing page
+        subscribeToRoom(room.id, player.id);
         
         // Start heartbeat to keep player active
         gameService.startHeartbeatInterval(player.id);
         
-        // Subscribe to real-time updates
-        subscribeToRoom(room.id);
+        setPage('lobby');
+        setShowNicknameModal(false);
         
       } else {
         //  JOIN ROOM in Supabase
@@ -85,16 +90,20 @@ export default function LiarWordGame() {
         setRoomCode(room.room_code);
         setRoomId(room.id);
         setPlayerId(player.id);
-        setPage('lobby');
-        setShowNicknameModal(false);
+        
+        // Get all players and subscribe
+        const { players: allPlayers } = await gameService.getRoomData(room.id);
+        console.log('📊 All players in room:', allPlayers);
+        setPlayers(allPlayers);
+        
+        // Subscribe to real-time updates BEFORE changing page
+        subscribeToRoom(room.id, player.id);
         
         // Start heartbeat
         gameService.startHeartbeatInterval(player.id);
         
-        // Get all players and subscribe
-        const { players: allPlayers } = await gameService.getRoomData(room.id);
-        setPlayers(allPlayers);
-        subscribeToRoom(room.id);
+        setPage('lobby');
+        setShowNicknameModal(false);
       }
     } catch (error) {
       console.error('❌ Error:', error);
@@ -105,42 +114,97 @@ export default function LiarWordGame() {
   };
 
   // Subscribe to real-time updates
-  const subscribeToRoom = (currentRoomId) => {
+  const subscribeToRoom = (currentRoomId, currentPlayerId) => {
+    console.log('🔔 Setting up subscription for room:', currentRoomId);
+    console.log('🔔 Player ID for subscription:', currentPlayerId);
+    
     const channel = gameService.subscribeToRoom(currentRoomId, {
       onPlayerChange: (normalized) => {
-        // normalized: { type, new, old, raw }
-        const { type, new: newRow, old: oldRow } = normalized;
+        try {
+          console.log('🔔 onPlayerChange callback triggered:', normalized);
+          
+          // normalized: { type, new, old, raw }
+          const { type, new: newRow, old: oldRow } = normalized;
 
-        setPlayers((prev = []) => {
-          const list = Array.isArray(prev) ? [...prev] : [];
+          setPlayers((prev) => {
+            console.log('🔔 Current players state:', prev);
+            const list = Array.isArray(prev) ? [...prev] : [];
 
-          if ((type === 'INSERT' || type === 'insert') && newRow) {
-            if (!list.find(p => String(p.id) === String(newRow.id))) return [...list, newRow];
+            if ((type === 'INSERT' || type === 'insert') && newRow) {
+              console.log('➕ Adding new player:', newRow);
+              if (!list.find(p => String(p.id) === String(newRow.id))) {
+                const updated = [...list, newRow];
+                console.log('✅ Updated players list:', updated);
+                return updated;
+              }
+              console.log('⚠️ Player already exists, skipping');
+              return list;
+            }
+
+            if ((type === 'UPDATE' || type === 'update') && newRow) {
+              console.log('🔄 Updating player:', newRow);
+              const updated = list.map(p => (String(p.id) === String(newRow.id) ? newRow : p));
+              console.log('✅ Updated players list:', updated);
+              return updated;
+            }
+
+            if ((type === 'DELETE' || type === 'delete') && oldRow) {
+              console.log('➖ Removing player:', oldRow);
+              const updated = list.filter(p => String(p.id) !== String(oldRow.id));
+              console.log('✅ Updated players list:', updated);
+              return updated;
+            }
+
+            console.log('⚠️ No matching action for type:', type);
             return list;
-          }
-
-          if ((type === 'UPDATE' || type === 'update') && newRow) {
-            return list.map(p => (String(p.id) === String(newRow.id) ? newRow : p));
-          }
-
-          if ((type === 'DELETE' || type === 'delete') && oldRow) {
-            return list.filter(p => String(p.id) !== String(oldRow.id));
-          }
-
-          return list;
-        });
+          });
+        } catch (error) {
+          console.error('❌ Error in onPlayerChange callback:', error);
+        }
       },
       onRoomUpdate: (payload) => {
-        if (payload?.new?.status === 'in_game') {
-          gameService.getPlayerWord(playerId).then(({ assigned_word }) => {
-            setUserWord(assigned_word);
-            setPage('game');
-          }).catch(() => {});
+        try {
+          console.log('🔔 onRoomUpdate callback triggered:', payload);
+          console.log('🔔 Room status:', payload?.new?.status);
+          
+          if (payload?.new?.status === 'in_game') {
+            console.log('🎮 Game starting, fetching player word...');
+            console.log('🎮 Using player ID:', currentPlayerId);
+            console.log('🎮 Room data:', payload?.new);
+            
+            // Set the selected category from room data
+            if (payload?.new?.selected_category) {
+              console.log('✅ Setting category from room update:', payload.new.selected_category);
+              setSelectedCategory(payload.new.selected_category);
+            }
+            
+            gameService.getPlayerWord(currentPlayerId).then(({ assigned_word }) => {
+              console.log('✅ Player word received:', assigned_word);
+              setUserWord(assigned_word);
+              setPage('game');
+            }).catch((error) => {
+              console.error('❌ Error fetching player word:', error);
+            });
+          } else if (payload?.new?.status === 'waiting') {
+            console.log('🔄 Game reset, returning to lobby...');
+            
+            // Reset game-related state for non-host players
+            if (!isHost) {
+              setSelectedCategory('');
+              setUserWord('');
+              setWordRevealed(false);
+              setPage('lobby');
+              console.log('✅ Non-host player returned to lobby');
+            }
+          }
+        } catch (error) {
+          console.error('❌ Error in onRoomUpdate callback:', error);
         }
       }
     });
 
     realtimeChannelRef.current = channel;
+    console.log('✅ Subscription setup complete, channel stored in ref');
   };
 
   const handleCopyCode = async () => {
