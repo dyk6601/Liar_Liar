@@ -66,6 +66,8 @@ const gameService = {
   // ==========================================
   async joinRoom(roomCode, nickname) {
     try {
+      console.log('🚪 Attempting to join room:', roomCode);
+      
       // Find room
       const { data: room, error: roomError } = await supabase
         .from('rooms')
@@ -74,8 +76,11 @@ const gameService = {
         .single();
       
       if (roomError || !room) {
+        console.error('Room not found:', roomError);
         throw new Error('Room not found');
       }
+      
+      console.log('✅ Room found:', room);
       
       // Check if game already started
       if (room.status !== 'waiting') {
@@ -91,6 +96,8 @@ const gameService = {
       
       if (countError) throw countError;
       
+      console.log('📊 Existing players:', existingPlayers);
+      
       if (existingPlayers.length >= room.max_players) {
         throw new Error('Room is full');
       }
@@ -102,6 +109,7 @@ const gameService = {
       }
       
       // Add player to room
+      console.log('➕ Adding player to room...');
       const { data: player, error: playerError } = await supabase
         .from('players')
         .insert([{
@@ -117,6 +125,8 @@ const gameService = {
         console.error('Player join error:', playerError);
         throw playerError;
       }
+      
+      console.log('✅ Player added to database:', player);
       
       // Start heartbeat
       await this.sendHeartbeat(player.id);
@@ -260,6 +270,8 @@ const gameService = {
   // ==========================================
   subscribeToRoom(roomId, callbacks = {}) {
     console.log('🔔 gameService.subscribeToRoom called for room:', roomId);
+    console.log('🔔 Callbacks provided:', Object.keys(callbacks));
+    
     const channel = supabase.channel(`room:${roomId}`);
 
     // Listen for player INSERT events
@@ -267,7 +279,9 @@ const gameService = {
       'postgres_changes',
       { event: 'INSERT', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
       (payload) => {
-        console.log('🔔 RAW Player INSERT payload:', payload);
+        console.log('🔔 ========================================');
+        console.log('🔔 RAW Player INSERT payload:', JSON.stringify(payload, null, 2));
+        console.log('🔔 ========================================');
         
         // Normalize payload shape for consumers (some clients use `record`, others `new`)
         const normalized = {
@@ -278,8 +292,13 @@ const gameService = {
         };
         
         console.log('🔔 Player INSERT (normalized):', normalized);
+        console.log('🔔 Calling onPlayerChange callback...');
+        
         if (callbacks.onPlayerChange) {
           callbacks.onPlayerChange(normalized);
+          console.log('✅ onPlayerChange callback executed');
+        } else {
+          console.warn('⚠️ No onPlayerChange callback provided!');
         }
       }
     );
@@ -289,6 +308,8 @@ const gameService = {
       'postgres_changes',
       { event: 'UPDATE', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
       (payload) => {
+        console.log('🔔 Player UPDATE payload:', payload);
+        
         // Normalize payload shape for consumers
         const normalized = {
           type: 'UPDATE',
@@ -309,6 +330,8 @@ const gameService = {
       'postgres_changes',
       { event: 'DELETE', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
       (payload) => {
+        console.log('🔔 Player DELETE payload:', payload);
+        
         // Normalize payload shape for consumers
         const normalized = {
           type: 'DELETE',
@@ -337,40 +360,31 @@ const gameService = {
     );
 
     // Subscribe to the channel
-    channel.subscribe((status) => {
+    channel.subscribe((status, err) => {
       console.log('🔔 Subscription status:', status);
+      if (err) {
+        console.error('❌ Subscription error:', err);
+      }
       if (status === 'SUBSCRIBED') {
         console.log('✅ Successfully subscribed to real-time updates for room:', roomId);
       }
+      if (status === 'CHANNEL_ERROR') {
+        console.error('❌ Channel error occurred');
+      }
+      if (status === 'TIMED_OUT') {
+        console.error('❌ Subscription timed out');
+      }
     });
 
-    console.log('🔔 gameService.subscribeToRoom subscribed channel:', channel);
-
-    // Monitor channel state until it becomes 'joined' or errors
-    try {
-      const checkInterval = setInterval(() => {
-        try {
-          const state = channel?.state;
-          console.log(`🔍 channel state for room ${roomId}:`, state);
-
-          if (state === 'joined') {
-            console.log(`✅ Realtime channel joined for room ${roomId}`);
-            clearInterval(checkInterval);
-          }
-        } catch (err) {
-          console.error('❌ Error reading channel state:', err);
-          clearInterval(checkInterval);
-        }
-      }, 500);
-    } catch (err) {
-      console.error('❌ Failed to monitor channel state:', err);
-    }
+    console.log('🔔 Channel object:', channel);
+    console.log('🔔 Channel state:', channel.state);
 
     return channel;
   },
   
   unsubscribeFromRoom(channel) {
     if (channel) {
+      console.log('👋 Unsubscribing from channel');
       supabase.removeChannel(channel);
     }
   },
