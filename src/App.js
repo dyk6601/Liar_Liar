@@ -312,6 +312,104 @@ export default function LiarWordGame() {
     }
   };
 
+  // ✅ Handle app focus/visibility changes (screen lock/unlock)
+  useEffect(() => {
+    let syncInterval = null;
+    
+    const handleVisibilityChange = async () => {
+      console.log('👁️ Visibility changed:', document.visibilityState);
+      
+      if (document.visibilityState === 'visible' && playerId && roomId) {
+        console.log('🔄 App became visible, performing full sync...');
+        await performFullSync();
+        
+        // Start periodic sync check while app is visible
+        startPeriodicSync();
+      } else if (document.visibilityState === 'hidden') {
+        console.log('💤 App went to background, stopping periodic sync');
+        stopPeriodicSync();
+      }
+    };
+    
+    const performFullSync = async () => {
+      try {
+        const syncData = await gameService.forceSync(playerId, roomId);
+        console.log('📊 Full sync complete:', syncData);
+        
+        setPlayers(syncData.players);
+        
+        // Update game state if changed
+        if (syncData.room.status === 'in_game') {
+          console.log('🎮 Game is active after sync');
+          
+          if (syncData.room.selected_category !== selectedCategory) {
+            console.log('📂 Category synced:', selectedCategory, '→', syncData.room.selected_category);
+            setSelectedCategory(syncData.room.selected_category);
+          }
+          
+          if (syncData.playerWord !== userWord) {
+            console.log('📝 Word synced:', userWord, '→', syncData.playerWord);
+            setUserWord(syncData.playerWord);
+          }
+          
+          if (page !== 'game') {
+            console.log('📱 Redirecting to game page');
+            setPage('game');
+          }
+        } else if (syncData.room.status === 'waiting' && page === 'game') {
+          console.log('🔄 Game was reset, returning to lobby');
+          setSelectedCategory('');
+          setUserWord('');
+          setWordRevealed(false);
+          setPage('lobby');
+        }
+        
+      } catch (error) {
+        console.error('❌ Error in full sync:', error);
+      }
+    };
+    
+    const startPeriodicSync = () => {
+      // Check for updates every 10 seconds while app is visible
+      syncInterval = setInterval(async () => {
+        if (document.visibilityState === 'visible' && playerId && roomId) {
+          console.log('🔄 Periodic sync check...');
+          
+          // Check connection health
+          const isHealthy = gameService.checkConnectionHealth(realtimeChannelRef.current);
+          if (!isHealthy) {
+            console.log('⚠️ Connection unhealthy, performing sync...');
+            await performFullSync();
+          }
+        }
+      }, 10000); // 10 seconds
+    };
+    
+    const stopPeriodicSync = () => {
+      if (syncInterval) {
+        clearInterval(syncInterval);
+        syncInterval = null;
+      }
+    };
+    
+    // Initial setup
+    if (playerId && roomId) {
+      if (document.visibilityState === 'visible') {
+        startPeriodicSync();
+      }
+    }
+    
+    // Listen for visibility changes
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleVisibilityChange);
+      stopPeriodicSync();
+    };
+  }, [playerId, roomId, userWord, selectedCategory, page]);
+
   // ✅ NEW: Cleanup on unmount
   useEffect(() => {
     return () => {

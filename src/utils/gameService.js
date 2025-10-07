@@ -272,7 +272,13 @@ const gameService = {
     console.log('🔔 gameService.subscribeToRoom called for room:', roomId);
     console.log('🔔 Callbacks provided:', Object.keys(callbacks));
     
-    const channel = supabase.channel(`room:${roomId}`);
+    const channel = supabase.channel(`room:${roomId}`, {
+      config: {
+        presence: {
+          key: roomId,
+        },
+      },
+    });
 
     // Listen for player INSERT events
     channel.on(
@@ -380,6 +386,43 @@ const gameService = {
     console.log('🔔 Channel state:', channel.state);
 
     return channel;
+  },
+
+  // ==========================================
+  // CONNECTION RECOVERY METHODS
+  // ==========================================
+  async forceSync(playerId, roomId) {
+    console.log('🔄 Force syncing player and room state...');
+    try {
+      // Send heartbeat to reconnect
+      await this.sendHeartbeat(playerId);
+      
+      // Get fresh room and player data
+      const roomData = await this.getRoomData(roomId);
+      const playerData = await this.getPlayerWord(playerId);
+      
+      return {
+        room: roomData.room,
+        players: roomData.players,
+        playerWord: playerData.assigned_word,
+        isLiar: playerData.is_liar
+      };
+    } catch (error) {
+      console.error('❌ Error force syncing:', error);
+      throw error;
+    }
+  },
+
+  checkConnectionHealth(channel) {
+    if (!channel) return false;
+    
+    const isHealthy = channel.state === 'joined' || channel.state === 'joining';
+    console.log('🏥 Connection health check:', {
+      state: channel.state,
+      isHealthy
+    });
+    
+    return isHealthy;
   },
   
   unsubscribeFromRoom(channel) {
