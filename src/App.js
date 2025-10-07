@@ -34,15 +34,22 @@ export default function LiarWordGame() {
   const [wordRevealed, setWordRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  
+  // Flag to prevent auto-sync after intentional exit
+  const [hasExitedIntentionally, setHasExitedIntentionally] = useState(false);
 
   const handleStartNewGame = () => {
     console.log('🎮 Start New Game clicked');
+    // Reset exit flag when starting new game
+    setHasExitedIntentionally(false);
     setShowNicknameModal(true);
     setIsHost(true);
   };
 
   const handleJoinGame = () => {
     console.log('🎮 Join Game clicked');
+    // Reset exit flag when joining new game
+    setHasExitedIntentionally(false);
     setShowNicknameModal(true);
     setIsHost(false);
   };
@@ -252,7 +259,10 @@ export default function LiarWordGame() {
 
   // ✅ UPDATED: Exit game and cleanup
   const handleExitGame = async () => {
-    console.log('👋 Exiting game');
+    console.log('👋 Exiting game intentionally');
+    
+    // Set flag to prevent auto-sync from bringing user back
+    setHasExitedIntentionally(true);
     
     try {
       // Mark player as inactive in Supabase
@@ -319,6 +329,12 @@ export default function LiarWordGame() {
     const handleVisibilityChange = async () => {
       console.log('👁️ Visibility changed:', document.visibilityState);
       
+      // Don't sync if user has intentionally exited
+      if (hasExitedIntentionally) {
+        console.log('🚫 Skipping sync - user has exited intentionally');
+        return;
+      }
+      
       if (document.visibilityState === 'visible' && playerId && roomId) {
         console.log('🔄 App became visible, performing full sync...');
         await performFullSync();
@@ -332,6 +348,12 @@ export default function LiarWordGame() {
     };
     
     const performFullSync = async () => {
+      // Don't sync if user has intentionally exited
+      if (hasExitedIntentionally) {
+        console.log('🚫 Skipping performFullSync - user has exited intentionally');
+        return;
+      }
+      
       try {
         const syncData = await gameService.forceSync(playerId, roomId);
         console.log('📊 Full sync complete:', syncData);
@@ -372,6 +394,13 @@ export default function LiarWordGame() {
     const startPeriodicSync = () => {
       // Check for updates every 10 seconds while app is visible
       syncInterval = setInterval(async () => {
+        // Don't sync if user has intentionally exited
+        if (hasExitedIntentionally) {
+          console.log('🚫 Skipping periodic sync - user has exited intentionally');
+          stopPeriodicSync();
+          return;
+        }
+        
         if (document.visibilityState === 'visible' && playerId && roomId) {
           console.log('🔄 Periodic sync check...');
           
