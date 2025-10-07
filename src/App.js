@@ -26,6 +26,7 @@ export default function LiarWordGame() {
   const [roomId, setRoomId] = useState('');
   const [playerId, setPlayerId] = useState('');
   const realtimeChannelRef = useRef(null);
+  const hasExitedIntentionallyRef = useRef(false);
   
   const [players, setPlayers] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -42,6 +43,7 @@ export default function LiarWordGame() {
     console.log('🎮 Start New Game clicked');
     // Reset exit flag when starting new game
     setHasExitedIntentionally(false);
+    hasExitedIntentionallyRef.current = false;
     setShowNicknameModal(true);
     setIsHost(true);
   };
@@ -50,6 +52,7 @@ export default function LiarWordGame() {
     console.log('🎮 Join Game clicked');
     // Reset exit flag when joining new game
     setHasExitedIntentionally(false);
+    hasExitedIntentionallyRef.current = false;
     setShowNicknameModal(true);
     setIsHost(false);
   };
@@ -129,6 +132,13 @@ export default function LiarWordGame() {
       onPlayerChange: (normalized) => {
         try {
           console.log('🔔 onPlayerChange callback triggered:', normalized);
+          console.log('🔔 Has exited intentionally:', hasExitedIntentionallyRef.current);
+          
+          // Don't process player changes if user has intentionally exited
+          if (hasExitedIntentionallyRef.current) {
+            console.log('🚫 Ignoring player change - user has exited intentionally');
+            return;
+          }
           
           // normalized: { type, new, old, raw }
           const { type, new: newRow, old: oldRow } = normalized;
@@ -173,6 +183,13 @@ export default function LiarWordGame() {
         try {
           console.log('🔔 onRoomUpdate callback triggered:', payload);
           console.log('🔔 Room status:', payload?.new?.status);
+          console.log('🔔 Has exited intentionally:', hasExitedIntentionallyRef.current);
+          
+          // Don't process room updates if user has intentionally exited
+          if (hasExitedIntentionallyRef.current) {
+            console.log('🚫 Ignoring room update - user has exited intentionally');
+            return;
+          }
           
           if (payload?.new?.status === 'in_game') {
             console.log('🎮 Game starting, fetching player word...');
@@ -263,6 +280,7 @@ export default function LiarWordGame() {
     
     // Set flag to prevent auto-sync from bringing user back
     setHasExitedIntentionally(true);
+    hasExitedIntentionallyRef.current = true;
     
     try {
       // Mark player as inactive in Supabase
@@ -437,7 +455,7 @@ export default function LiarWordGame() {
       window.removeEventListener('focus', handleVisibilityChange);
       stopPeriodicSync();
     };
-  }, [playerId, roomId, userWord, selectedCategory, page]);
+  }, [playerId, roomId, userWord, selectedCategory, page, hasExitedIntentionally]);
 
   // ✅ NEW: Cleanup on unmount
   useEffect(() => {
