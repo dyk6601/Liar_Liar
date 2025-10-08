@@ -39,12 +39,53 @@ export default function LiarWordGame() {
   
   // Flag to prevent auto-sync after intentional exit
   const [hasExitedIntentionally, setHasExitedIntentionally] = useState(false);
+  
+  // Auto-join room code from URL parameter
+  const [autoJoinRoomCode, setAutoJoinRoomCode] = useState('');
+
+  // ✅ NEW: URL Parameter Detection for QR Code Scanning
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomFromUrl = urlParams.get('room');
+    
+    if (roomFromUrl) {
+      console.log('🔗 Room code detected in URL:', roomFromUrl);
+      
+      // Validate room code format (6 chars, A-Z0-9)
+      if (/^[A-Z0-9]{6}$/.test(roomFromUrl)) {
+        console.log('✅ Valid room code format, auto-opening join modal');
+        setAutoJoinRoomCode(roomFromUrl);
+        setIsHost(false);
+        setShowRulesModal(false); // Skip rules for QR code users
+        setShowNicknameModal(true);
+      } else {
+        console.warn('⚠️ Invalid room code format in URL:', roomFromUrl);
+        // Clear invalid room code from URL
+        updateURL(null);
+      }
+    }
+  }, []);
+
+  // ✅ NEW: URL Management Helper
+  const updateURL = (roomCode) => {
+    if (roomCode) {
+      const newUrl = `${window.location.origin}?room=${roomCode}`;
+      window.history.pushState({ roomCode }, '', newUrl);
+      console.log('🔗 URL updated to:', newUrl);
+    } else {
+      // Clear room parameter
+      const newUrl = window.location.origin;
+      window.history.pushState({}, '', newUrl);
+      console.log('🔗 URL cleared to:', newUrl);
+    }
+  };
 
   const handleStartNewGame = () => {
     console.log('🎮 Start New Game clicked');
     // Reset exit flag when starting new game
     setHasExitedIntentionally(false);
     hasExitedIntentionallyRef.current = false;
+    setAutoJoinRoomCode(''); // Clear any auto-join room code
     setShowNicknameModal(true);
     setIsHost(true);
   };
@@ -54,6 +95,7 @@ export default function LiarWordGame() {
     // Reset exit flag when joining new game
     setHasExitedIntentionally(false);
     hasExitedIntentionallyRef.current = false;
+    setAutoJoinRoomCode(''); // Clear any auto-join room code
     setShowNicknameModal(true);
     setIsHost(false);
   };
@@ -87,8 +129,12 @@ export default function LiarWordGame() {
         // Start heartbeat to keep player active
         gameService.startHeartbeatInterval(player.id);
         
+        // Update URL to include room code
+        updateURL(room.room_code);
+        
         setPage('lobby');
         setShowNicknameModal(false);
+        setAutoJoinRoomCode(''); // Clear auto-join after successful room creation
         
       } else {
         //  JOIN ROOM in Supabase
@@ -113,8 +159,12 @@ export default function LiarWordGame() {
         // Start heartbeat
         gameService.startHeartbeatInterval(player.id);
         
+        // Update URL to include room code
+        updateURL(room.room_code);
+        
         setPage('lobby');
         setShowNicknameModal(false);
+        setAutoJoinRoomCode(''); // Clear auto-join after successful room join
       }
     } catch (error) {
       console.error('❌ Error:', error);
@@ -313,6 +363,10 @@ export default function LiarWordGame() {
       setUseLiarWord(false);
       setUserWord('');
       setWordRevealed(false);
+      setAutoJoinRoomCode('');
+      
+      // Clear room code from URL
+      updateURL(null);
       
       console.log('✅ Successfully exited game');
       
@@ -502,6 +556,7 @@ export default function LiarWordGame() {
             onClose={() => setShowNicknameModal(false)}
             isHost={isHost}
             onSubmit={handleNicknameSubmit}
+            autoRoomCode={autoJoinRoomCode}
           />
         </>
       )}

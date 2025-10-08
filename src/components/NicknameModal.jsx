@@ -9,7 +9,7 @@ import Modal from './modal.jsx';
 import Input from './input.jsx';
 import Button from './button.jsx';
 
-const NicknameModal = ({ isOpen, onClose, isHost, onSubmit }) => {
+const NicknameModal = ({ isOpen, onClose, isHost, onSubmit, autoRoomCode = '' }) => {
   const [nickname, setNickname] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const [error, setError] = useState('');
@@ -31,6 +31,7 @@ const NicknameModal = ({ isOpen, onClose, isHost, onSubmit }) => {
     }
     
     onSubmit({ nickname, roomCode: roomCode.toUpperCase() });
+    // Reset form
     setNickname('');
     setRoomCode('');
   };
@@ -38,8 +39,13 @@ const NicknameModal = ({ isOpen, onClose, isHost, onSubmit }) => {
   useEffect(() => {
     if (isOpen) {
       setError('');
+      // Auto-populate room code if provided (from QR code scan)
+      if (autoRoomCode && !isHost) {
+        setRoomCode(autoRoomCode);
+        console.log('✅ Auto-populated room code from QR scan:', autoRoomCode);
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, autoRoomCode, isHost]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Enter Your Nickname">
@@ -58,7 +64,12 @@ const NicknameModal = ({ isOpen, onClose, isHost, onSubmit }) => {
         </div>
         {!isHost && (
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Enter room code</label>
+            <label className="text-sm font-medium text-gray-700">
+              Enter room code
+              {autoRoomCode && (
+                <span className="text-green-600 font-normal"> (from QR code)</span>
+              )}
+            </label>
             <Input
               placeholder="6 characters"
               value={roomCode}
@@ -70,7 +81,7 @@ const NicknameModal = ({ isOpen, onClose, isHost, onSubmit }) => {
               }}
               maxLength={6}
               aria-describedby="roomcode-help"
-              className="tracking-widest text-left"
+              className={`tracking-widest text-left ${autoRoomCode ? 'bg-green-50 border-green-300' : ''}`}
             />
             <div className="text-xs text-gray-600">{roomCode.length}/6</div>
           </div>
