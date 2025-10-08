@@ -527,6 +527,41 @@ const gameService = {
     
     console.log('✅ Game reset for room:', roomId);
   },
+
+  // ==========================================
+  // 9. END GAME (Host leaves)
+  // ==========================================
+  async endGame(roomId) {
+    console.log('🏁 Ending game for room:', roomId);
+    
+    try {
+      // Set room status to finished
+      const { error: roomError } = await supabase
+        .from('rooms')
+        .update({
+          status: 'finished'
+        })
+        .eq('id', roomId);
+      
+      if (roomError) throw roomError;
+      
+      // Mark all players in room as inactive
+      const { error: playersError } = await supabase
+        .from('players')
+        .update({
+          is_active: false
+        })
+        .eq('room_id', roomId);
+      
+      if (playersError) throw playersError;
+      
+      console.log('✅ Game ended for room:', roomId);
+      
+    } catch (error) {
+      console.error('❌ Error ending game:', error);
+      throw error;
+    }
+  },
   
   // ==========================================
   // HELPER FUNCTIONS

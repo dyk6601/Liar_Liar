@@ -283,6 +283,12 @@ export default function LiarWordGame() {
     hasExitedIntentionallyRef.current = true;
     
     try {
+      // If host is leaving, end the game for everyone
+      if (isHost && roomId) {
+        console.log('🏠 Host is leaving - ending game for all players');
+        await gameService.endGame(roomId);
+      }
+      
       // Mark player as inactive in Supabase
       if (playerId) {
         await gameService.leaveRoom(playerId);
@@ -421,6 +427,12 @@ export default function LiarWordGame() {
         
         if (document.visibilityState === 'visible' && playerId && roomId) {
           console.log('🔄 Periodic sync check...');
+          
+          // Don't even check connection health if user has exited
+          if (hasExitedIntentionallyRef.current) {
+            console.log('🚫 Skipping connection health check - user has exited intentionally');
+            return;
+          }
           
           // Check connection health
           const isHealthy = gameService.checkConnectionHealth(realtimeChannelRef.current);
