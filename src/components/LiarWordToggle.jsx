@@ -12,9 +12,9 @@ const LiarWordToggle = ({ useLiarWord, setUseLiarWord, isHost = false }) => {
       <div className="p-4 rounded-lg border-2 border-gray-200 bg-white">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-sm font-medium text-gray-700">Liar Word Mode</div>
+            <div className="text-sm font-medium text-gray-700">Game Mode</div>
             <div className="text-xs text-gray-500 mt-1">
-              {useLiarWord ? 'Liars get the word "LIAR!"' : 'Liars get a different word from the category'}
+              {useLiarWord ? 'Liars get the word "LIAR!"' : 'Liar receives a different word'}
             </div>
           </div>
           <div className="flex items-center">
