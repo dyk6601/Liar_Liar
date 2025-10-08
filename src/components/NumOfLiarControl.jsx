@@ -14,7 +14,6 @@ const NumOfLiarControl = ({ numLiars, setNumLiars, players = [], isHost = false 
       <div className="p-4 rounded-lg border-2 border-gray-200 bg-white flex items-center justify-between">
         <div>
           <div className="text-sm font-medium text-gray-700">Number of liars</div>
-          <div className="text-xs text-gray-500">Liars receive the minority word.</div>
         </div>
         <div className="flex items-center gap-2">
           <button

@@ -31,6 +31,7 @@ export default function LiarWordGame() {
   const [players, setPlayers] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [numLiars, setNumLiars] = useState(1);
+  const [useLiarWord, setUseLiarWord] = useState(false); // false = minority word, true = "LIAR!"
   const [userWord, setUserWord] = useState('');
   const [wordRevealed, setWordRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -257,13 +258,14 @@ export default function LiarWordGame() {
     
     try {
       // Start game on server (assigns words to all players)
-      await gameService.startGame(roomId, selectedCategory, WORD_CATEGORIES);
+      await gameService.startGame(roomId, selectedCategory, WORD_CATEGORIES, useLiarWord);
       
       // Get this player's assigned word
       const playerData = await gameService.getPlayerWord(playerId);
       setUserWord(playerData.assigned_word);
       
       console.log('✅ Game started, word assigned:', playerData.assigned_word);
+      console.log('✅ Liar word mode:', useLiarWord ? '"LIAR!"' : 'category word');
       setPage('game');
       
     } catch (error) {
@@ -308,6 +310,7 @@ export default function LiarWordGame() {
       setIsHost(false);
       setPlayers([]);
       setSelectedCategory('');
+      setUseLiarWord(false);
       setUserWord('');
       setWordRevealed(false);
       
@@ -514,6 +517,8 @@ export default function LiarWordGame() {
           onLeave={handleExitGame}
           numLiars={numLiars}
           setNumLiars={setNumLiars}
+          useLiarWord={useLiarWord}
+          setUseLiarWord={setUseLiarWord}
         />
       )}
       

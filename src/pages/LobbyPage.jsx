@@ -3,6 +3,7 @@ import RoomCode from '../components/RoomCode.jsx';
 import QRCode from '../components/QRcode.jsx';
 import PlayersList from '../components/PlayersList.jsx';
 import NumOfLiarControl from '../components/NumOfLiarControl.jsx';
+import LiarWordToggle from '../components/LiarWordToggle.jsx';
 import Button from '../components/button.jsx';
 
 // pages/LobbyPage.jsx
@@ -15,7 +16,7 @@ import Button from '../components/button.jsx';
 //  - onCopyCode: copy room code to clipboard
 //  - copied: visual feedback flag
 //  - onLeave: leave the lobby and reset local state
-const LobbyPage = ({ roomCode, players, isHost, onReady, onCopyCode, copied, onLeave, numLiars, setNumLiars }) => {
+const LobbyPage = ({ roomCode, players, isHost, onReady, onCopyCode, copied, onLeave, numLiars, setNumLiars, useLiarWord, setUseLiarWord }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 p-8">
       <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8">
@@ -24,7 +25,10 @@ const LobbyPage = ({ roomCode, players, isHost, onReady, onCopyCode, copied, onL
   <QRCode code={roomCode} />
 
   {isHost && (
-    <NumOfLiarControl numLiars={numLiars} setNumLiars={setNumLiars} players={players} isHost={isHost} />
+    <>
+      <NumOfLiarControl numLiars={numLiars} setNumLiars={setNumLiars} players={players} isHost={isHost} />
+      <LiarWordToggle useLiarWord={useLiarWord} setUseLiarWord={setUseLiarWord} isHost={isHost} />
+    </>
   )}
 
         <PlayersList players={players} />

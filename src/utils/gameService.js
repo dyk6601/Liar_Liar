@@ -144,7 +144,7 @@ const gameService = {
   // ==========================================
   // 3. START GAME (Select Category & Assign Words)
   // ==========================================
-  async startGame(roomId, category, wordCategories) {
+  async startGame(roomId, category, wordCategories, useLiarWord = false) {
     try {
       // Get all active players
       const { data: players, error: playersError } = await supabase
@@ -175,7 +175,8 @@ const gameService = {
           selected_category: category,
           majority_word: wordPair.majority,
           minority_word: wordPair.minority,
-          liar_player_id: liarPlayer.id
+          liar_player_id: liarPlayer.id,
+          use_liar_word: useLiarWord
         })
         .eq('id', roomId);
       
@@ -186,8 +187,16 @@ const gameService = {
       
       // Assign words to all players
       for (const player of players) {
-        const assignedWord = player.id === liarPlayer.id ? wordPair.minority : wordPair.majority;
+        let assignedWord;
         const isLiar = player.id === liarPlayer.id;
+        
+        if (isLiar && useLiarWord) {
+          assignedWord = "LIAR!";
+        } else if (isLiar && !useLiarWord) {
+          assignedWord = wordPair.minority;
+        } else {
+          assignedWord = wordPair.majority;
+        }
         
         await supabase
           .from('players')
