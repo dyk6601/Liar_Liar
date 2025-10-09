@@ -160,7 +160,19 @@ const gameService = {
       }
       
       // Select random word pair
-      const categoryWords = wordCategories[category];
+      let categoryWords;
+      let actualCategory = category;
+      
+      if (category === 'Random') {
+        // For Random category, pick from all other categories
+        const availableCategories = Object.keys(wordCategories).filter(cat => cat !== 'Random');
+        actualCategory = availableCategories[Math.floor(Math.random() * availableCategories.length)];
+        categoryWords = wordCategories[actualCategory];
+        console.log('🎲 Random category selected:', actualCategory);
+      } else {
+        categoryWords = wordCategories[category];
+      }
+      
       const wordPair = categoryWords[Math.floor(Math.random() * categoryWords.length)];
       
       // Select random liar
@@ -172,7 +184,7 @@ const gameService = {
         .from('rooms')
         .update({
           status: 'in_game',
-          selected_category: category,
+          selected_category: actualCategory, // Store the actual category used (not "Random")
           majority_word: wordPair.majority,
           minority_word: wordPair.minority,
           liar_player_id: liarPlayer.id,
@@ -207,11 +219,11 @@ const gameService = {
           .eq('id', player.id);
       }
       
-      console.log('✅ Game started with category:', category);
+      console.log('✅ Game started with category:', actualCategory);
       console.log('✅ Liar selected:', liarPlayer.nickname);
       
       return {
-        category,
+        category: actualCategory,
         majorityWord: wordPair.majority,
         minorityWord: wordPair.minority,
         liarId: liarPlayer.id
