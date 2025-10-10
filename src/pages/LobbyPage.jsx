@@ -18,35 +18,58 @@ import Button from '../components/button.jsx';
 //  - onLeave: leave the lobby and reset local state
 const LobbyPage = ({ roomCode, players, isHost, onReady, onCopyCode, copied, onLeave, numLiars, setNumLiars, useLiarWord, setUseLiarWord }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 p-8">
-      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-400 flex items-center justify-center p-4">
+      <div className="max-w-2xl w-full mx-auto bg-amber-50 rounded-3xl shadow-2xl border-4 border-gray-800 p-8">
+        
+        {/* Icon */}
+        <div className="mb-6 flex justify-center">
+          <div className="w-20 h-20 bg-amber-100 rounded-3xl flex items-center justify-center shadow-lg border-4 border-gray-800">
+            <span className="text-3xl">🏠</span>
+          </div>
+        </div>
 
-  <RoomCode code={roomCode} onCopy={onCopyCode} copied={copied} />
-  <QRCode code={roomCode} />
 
-  {isHost && (
-    <>
-      <NumOfLiarControl numLiars={numLiars} setNumLiars={setNumLiars} players={players} isHost={isHost} />
-      <LiarWordToggle useLiarWord={useLiarWord} setUseLiarWord={setUseLiarWord} isHost={isHost} />
-    </>
-  )}
+        <RoomCode code={roomCode} onCopy={onCopyCode} copied={copied} />
+        <QRCode code={roomCode} />
+
+        {isHost && (
+          <>
+            <NumOfLiarControl numLiars={numLiars} setNumLiars={setNumLiars} players={players} isHost={isHost} />
+            <LiarWordToggle useLiarWord={useLiarWord} setUseLiarWord={setUseLiarWord} isHost={isHost} />
+          </>
+        )}
 
         <PlayersList players={players} />
 
         {isHost ? (
-          <Button onClick={onReady} variant="success" className="w-full">
+          <Button 
+            onClick={onReady} 
+            variant="success" 
+            className="w-full py-4"
+          >
             Ready?
           </Button>
         ) : (
-          <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 text-center">
-            <p className="text-blue-700 font-medium">Waiting for host to start the game...</p>
+          <div className="bg-amber-100 border-4 border-gray-800 rounded-2xl p-4 text-center shadow-lg">
+            <p className="text-gray-800 font-bold">Waiting for host to start the game...</p>
           </div>
         )}
 
         <div className="mt-4">
-          <Button onClick={onLeave} variant="outline" className="w-full">
+          <Button 
+            onClick={onLeave} 
+            variant="outline" 
+            className="w-full py-4 bg-amber-50 hover:bg-amber-100 text-gray-800 font-bold rounded-2xl shadow-lg border-4 border-gray-800 transition-transform hover:scale-105 active:scale-95"
+          >
             Leave Lobby
           </Button>
+        </div>
+        
+        {/* Decorative dots */}
+        <div className="flex justify-center gap-3 mt-6">
+          <div className="w-3 h-3 rounded-full bg-gray-800"></div>
+          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+          <div className="w-3 h-3 rounded-full bg-gray-800"></div>
         </div>
       </div>
     </div>

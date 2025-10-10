@@ -9,9 +9,9 @@ const QRCodeComponent = ({ roomCode }) => {
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(gameLink)}`;
   
   return (
-    <div className="bg-gray-100 rounded-xl p-4 mb-4 flex flex-col items-center justify-center">
-      <p className="text-xs text-gray-600 mb-2">Scan to Join</p>
-      <div className="bg-white p-2 rounded-lg border-2 border-gray-300">
+    <div className="bg-amber-100 rounded-2xl p-4 mb-4 flex flex-col items-center justify-center shadow-lg border-4 border-gray-800">
+      <p className="text-sm text-gray-800 mb-2 font-bold">Scan to Join</p>
+      <div className="bg-white p-2 rounded-2xl border-4 border-gray-800 shadow-lg">
         <img 
           src={qrCodeUrl} 
           alt="QR Code to join game"
@@ -19,7 +19,7 @@ const QRCodeComponent = ({ roomCode }) => {
           onError={(e) => {
             // Fallback if QR code fails
             e.target.style.display = 'none';
-            e.target.parentElement.innerHTML = '<p class="text-gray-400 w-32 h-32 flex items-center justify-center text-center text-xs">QR Code<br/>Unavailable</p>';
+            e.target.parentElement.innerHTML = '<p class="text-gray-800 w-32 h-32 flex items-center justify-center text-center text-xs font-bold">QR Code<br/>Unavailable</p>';
           }}
         />
       </div>

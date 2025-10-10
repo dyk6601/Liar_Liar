@@ -13,9 +13,16 @@ import Button from '../components/button.jsx';
 
 const CategoryPage = ({ categories, selectedCategory, onSelectCategory, onStartGame }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-400 via-teal-400 to-blue-400 p-8">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-4xl font-bold text-white mb-8 text-center drop-shadow-lg">Choose a Category</h2>
+    <div className="min-h-screen bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-400 flex items-center justify-center p-4">
+      <div className="max-w-4xl mx-auto text-center">
+        {/* Icon */}
+        <div className="mb-6 flex justify-center">
+          <div className="w-24 h-24 bg-amber-100 rounded-3xl flex items-center justify-center shadow-lg border-4 border-gray-800">
+            <span className="text-4xl">📂</span>
+          </div>
+        </div>
+
+        <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2 drop-shadow-sm">Choose a Category</h2>
         
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
           {categories.map((category) => (
@@ -28,15 +35,20 @@ const CategoryPage = ({ categories, selectedCategory, onSelectCategory, onStartG
           ))}
         </div>
 
-        <div className="text-center">
-          <Button
-            onClick={onStartGame}
-            variant="success"
-            className="text-xl px-12"
-            disabled={!selectedCategory}
-          >
-            Start Game
-          </Button>
+        <Button
+          onClick={onStartGame}
+          variant="success"
+          className="w-full md:w-64 text-lg py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl shadow-lg border-4 border-gray-800 transition-transform hover:scale-105 active:scale-95"
+          disabled={!selectedCategory}
+        >
+          Start Game
+        </Button>
+        
+        {/* Decorative dots */}
+        <div className="flex justify-center gap-3 mt-8">
+          <div className="w-3 h-3 rounded-full bg-gray-800"></div>
+          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+          <div className="w-3 h-3 rounded-full bg-gray-800"></div>
         </div>
       </div>
     </div>

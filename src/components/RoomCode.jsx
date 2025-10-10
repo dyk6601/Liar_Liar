@@ -8,11 +8,11 @@ import { CheckIcon, CopyIcon } from './icons.jsx';
 // by the parent (for easier testing).
 const RoomCode = ({ code, onCopy, copied }) => {
   return (
-    <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-4 mb-4">
-      <p className="text-xs text-gray-600 mb-1 text-center">Room Code</p>
+    <div className="bg-amber-100 rounded-2xl p-4 mb-4 shadow-lg border-4 border-gray-800">
+      <p className="text-sm text-gray-800 mb-1 text-center font-bold">Room Code</p>
       <div className="flex items-center justify-center gap-3">
-        <p className="text-3xl font-bold text-purple-600 tracking-widest">{code}</p>
-        <button onClick={onCopy} className="text-purple-600 hover:text-purple-700 transition">
+        <p className="text-3xl font-bold text-gray-800 tracking-widest">{code}</p>
+        <button onClick={onCopy} className="text-gray-800 hover:text-red-500 transition transform hover:scale-110">
           {copied ? <CheckIcon /> : <CopyIcon />}
         </button>
       </div>

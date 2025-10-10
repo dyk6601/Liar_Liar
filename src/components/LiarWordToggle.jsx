@@ -9,32 +9,34 @@ import React from 'react';
 const LiarWordToggle = ({ useLiarWord, setUseLiarWord, isHost = false }) => {
   return (
     <div className="mb-6">
-      <div className="p-4 rounded-lg border-2 border-gray-200 bg-white">
+      <div className="p-4 rounded-2xl border-4 border-gray-800 bg-amber-100 shadow-lg">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-sm font-medium text-gray-700">Game Mode</div>
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-sm font-bold text-gray-800">Game Mode</div>
+            <div className="text-xs text-gray-600 mt-1">
               {useLiarWord ? 'Liars get the word "LIAR!"' : 'Liar receives a different word'}
             </div>
           </div>
-          <div className="flex items-center">
-            <button
-              onClick={() => isHost && setUseLiarWord(!useLiarWord)}
-              disabled={!isHost}
-              className={`
-                relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-                ${useLiarWord ? 'bg-red-500' : 'bg-green-500'}
-                ${!isHost ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-              `}
-            >
-              <span
+          <div className="flex items-center flex-shrink-0">
+            <div className="relative">
+              <button
+                onClick={() => isHost && setUseLiarWord(!useLiarWord)}
+                disabled={!isHost}
                 className={`
-                  inline-block h-4 w-4 transform rounded-full bg-white transition-transform
-                  ${useLiarWord ? 'translate-x-6' : 'translate-x-1'}
+                  relative inline-flex h-8 w-14 items-center rounded-full transition-colors duration-200 ease-in-out border-2 border-gray-800
+                  ${useLiarWord ? 'bg-red-500' : 'bg-green-500'}
+                  ${!isHost ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-105'}
                 `}
-              />
-            </button>
-            <div className="ml-3 text-sm font-medium">
+              >
+                <span
+                  className={`
+                    absolute inline-block h-6 w-6 rounded-full bg-white border-2 border-gray-800 transition-transform duration-200 ease-in-out
+                    ${useLiarWord ? 'transform translate-x-7' : 'transform translate-x-0.5'}
+                  `}
+                />
+              </button>
+            </div>
+            <div className="ml-3 text-sm font-bold w-24 text-left">
               {useLiarWord ? (
                 <span className="text-red-600">"LIAR!"</span>
               ) : (
@@ -43,7 +45,7 @@ const LiarWordToggle = ({ useLiarWord, setUseLiarWord, isHost = false }) => {
             </div>
           </div>
         </div>
-        {!isHost && <div className="text-xs text-gray-500 mt-2">Controlled by host</div>}
+        {!isHost && <div className="text-xs text-gray-600 mt-2 font-medium">Controlled by host</div>}
       </div>
     </div>
   );
