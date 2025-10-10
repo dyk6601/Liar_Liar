@@ -36,7 +36,7 @@ const LiarWordToggle = ({ useLiarWord, setUseLiarWord, isHost = false }) => {
                 />
               </button>
             </div>
-            <div className="ml-3 text-sm font-bold w-24 text-left">
+            <div className="ml-3 text-sm font-bold">
               {useLiarWord ? (
                 <span className="text-red-600">"LIAR!"</span>
               ) : (
