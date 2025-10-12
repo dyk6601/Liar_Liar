@@ -165,13 +165,13 @@ export const WORD_CATEGORIES = {
     { majority: 'Pikachu', minority: 'Charizard' },
     { majority: 'Homer Simpson', minority: 'Bart Simpson' },
     { majority: 'Hello Kitty', minority: 'My Melody' },
-    { majority: 'Jake from Adventure Time', minority: 'Finn from Adventure Time' },
+    { majority: 'Jake (Adventure Time)', minority: 'Finn (Adventure Time)' },
     { majority: 'Blossom', minority: 'Buttercup' },
-    { majority: 'Timmy Turner', minority: 'Cosmo' },
+    { majority: 'Timmy Turner', minority: 'Gru' },
     { majority: 'SpongeBob', minority: 'Patrick Star' },
     { majority: 'Bugs Bunny', minority: 'Daffy Duck' },
     { majority: 'Tom', minority: 'Jerry' },
-    { majority: 'Scooby-Doo', minority: 'Shaggy' },
+    { majority: 'Scooby-Doo', minority: 'Goofy' },
     { majority: 'Garfield', minority: 'Winnie the Pooh' },
     { majority: 'Elsa', minority: 'Anna' },
     { majority: 'Woody', minority: 'Buzz Lightyear' },
@@ -184,6 +184,13 @@ export const WORD_CATEGORIES = {
     { majority: 'SpongeBob', minority: 'Garfield' },
     { majority: 'Goku', minority: 'Naruto' },
     { majority: 'Elsa', minority: 'Hello Kitty' },
-    { majority: 'Mario', minority: 'Woody' }
+    { majority: 'Mario', minority: 'Woody' },
+    { majority: 'Phineas Flynn', minority: 'Jimmy Neutron' },
+    { majority: 'Stewie Griffin', minority: 'Dora' },
+    { majority: 'Mike Wazowski', minority: 'Stitch' },
+    { majority: 'Totoro', minority: 'Po (Kung Fu Panda)' },
+
+
+
   ]
 };

@@ -17,7 +17,7 @@ const GamePage = ({ userWord, wordRevealed, onToggleWord, isHost, onPlayAgain, o
       
         <div className="text-center mb-6">
           <h3 className="text-2xl font-bold text-gray-800 mb-2">Category</h3>
-          <h2 className="text-3xl font-bold text-teal-500 drop-shadow-sm">{selectedCategory || '—'}</h2>
+          <h2 className="text-3xl font-bold text-teal-500 drop-shadow-sm">{selectedCategory?.replace(/_/g, ' ') || '—'}</h2>
         </div>
         
         <WordRevealer word={userWord} isRevealed={wordRevealed} onToggle={onToggleWord} />
