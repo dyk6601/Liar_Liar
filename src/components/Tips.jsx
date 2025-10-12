@@ -19,8 +19,8 @@ const Tips = ({ trigger, className = '' }) => {
 
   return (
     <div className={`rounded-lg p-4 ${className}`}>
-      <div className="text-sm mb-2 text-muted">Tips & tricks</div>
-      <div className="text-base font-medium">{current}</div>
+      <div className="text-xs mb-2 text-gray-500">Tips & tricks</div>
+      <div className="text-sm font-medium">{current}</div>
     </div>
   );
 };

@@ -15,10 +15,19 @@ const CategoryPage = ({ categories, selectedCategory, onSelectCategory, onStartG
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-400 flex items-center justify-center p-4">
       <div className="max-w-4xl mx-auto text-center">
-        {/* Icon */}
+        {/* Yappie Image */}
         <div className="mb-6 flex justify-center">
-          <div className="w-24 h-24 bg-amber-100 rounded-3xl flex items-center justify-center shadow-lg border-4 border-gray-800">
-            <span className="text-4xl">📂</span>
+          <div className="w-24 h-24 bg-amber-100 rounded-3xl flex items-center justify-center shadow-lg border-4 border-gray-800 overflow-hidden">
+            <img 
+              src="/img/yappie.png" 
+              alt="Yappie"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // Fallback to folder emoji if image fails to load
+                e.target.style.display = 'none';
+                e.target.parentElement.innerHTML = '<span class="text-4xl">📂</span>';
+              }}
+            />
           </div>
         </div>
 
