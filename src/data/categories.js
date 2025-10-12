@@ -27,6 +27,12 @@ export const WORD_CATEGORIES = {
     { majority: 'Panda', minority: 'Seals' },
     { majority: 'Kangaroo', minority: 'Koala' },
     { majority: 'Tortoise', minority: 'Sloth' },
+    { majority: 'Hamster', minority: 'Hedgehog' },
+    { majority: 'Giraffe', minority: 'Camel' },
+    { majority: 'Parrot', minority: 'Toucan' },
+    { majority: 'Pelican', minority: 'Puffins' },
+    { majority: 'Wolf', minority: 'Jaguar' }
+
   ],
   Sports: [
     { majority: 'Soccer', minority: 'Basketball' },
@@ -41,4 +47,29 @@ export const WORD_CATEGORIES = {
     { majority: 'Keanu Reeves', minority: 'Bruce Willis' },
     { majority: 'Barack Obama', minority: 'Martin Luther King Jr.' }
   ],
+  Soccer_Players: [
+    { majority: 'Neymar', minority: 'Kylian Mbappe' },
+    { majority: 'Zlatan Ibrahimovic', minority: 'Robert Lewandowski' },
+    { majority: 'Luka Modric', minority: 'Vitinha' },
+    { majority: 'Karim Benzema', minority: 'Sadio Mane' },
+    { majority: 'Son Heung-min', minority: 'Omar Marmoush' },
+    { majority: 'Angel Di Maria', minority: 'Mesut Ozil' },
+    { majority: 'Desire Doue', minority: 'Lamine Yamal' }
+  ],
+  NBA_Players: [
+    { majority: 'LeBron James', minority: 'Michael Jordan' },
+    { majority: 'Stephen Curry', minority: 'Klay Thompson' },
+    { majority: 'Giannis Antetokounmpo', minority: 'Kawhi Leonard' },
+    { majority: 'Luka Doncic', minority: 'Trae Young' }
+  ],
+  Mythical_Creatures: [
+    { majority: 'Dragon', minority: 'Unicorn' },
+    { majority: 'Phoenix', minority: 'Griffin' },
+    { majority: 'Mermaid', minority: 'Centaur' },
+    { majority: 'Fairy', minority: 'Elf' },
+    { majority: 'Goblin', minority: 'Troll' },
+    { majority: 'Hydra', minority: 'Sphinx' },
+    { majority: 'Yeti', minority: 'Minotaur' },
+    { majority: 'Mermaid', minority: 'Werewolf' }
+  ]
 };
