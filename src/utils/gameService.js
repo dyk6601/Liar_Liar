@@ -159,6 +159,13 @@ const gameService = {
         throw new Error('Need at least 1 player to start');
       }
       
+      // Shuffle players array to ensure true randomness (Fisher-Yates shuffle)
+      const shuffledPlayers = [...players];
+      for (let i = shuffledPlayers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPlayers[i], shuffledPlayers[j]] = [shuffledPlayers[j], shuffledPlayers[i]];
+      }
+      
       // Select random word pair
       let categoryWords;
       let actualCategory = category;
@@ -175,9 +182,13 @@ const gameService = {
       
       const wordPair = categoryWords[Math.floor(Math.random() * categoryWords.length)];
       
-      // Select random liar
-      const liarIndex = Math.floor(Math.random() * players.length);
-      const liarPlayer = players[liarIndex];
+      // Select random liar from shuffled array
+      const liarIndex = Math.floor(Math.random() * shuffledPlayers.length);
+      const liarPlayer = shuffledPlayers[liarIndex];
+      
+      console.log('🎯 Players in room:', players.map(p => `${p.nickname}(${p.is_host ? 'host' : 'player'})`));
+      console.log('🎯 Shuffled players:', shuffledPlayers.map(p => `${p.nickname}(${p.is_host ? 'host' : 'player'})`));
+      console.log('🎯 Selected liar index:', liarIndex, 'Player:', liarPlayer.nickname);
       
       // Update room with game data
       const { error: roomUpdateError } = await supabase
@@ -220,7 +231,7 @@ const gameService = {
       }
       
       console.log('✅ Game started with category:', actualCategory);
-      console.log('✅ Liar selected:', liarPlayer.nickname);
+      console.log('✅ Liar selected:', liarPlayer.nickname, '(was host:', liarPlayer.is_host ? 'yes' : 'no', ')');
       
       return {
         category: actualCategory,
