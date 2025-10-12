@@ -12,7 +12,7 @@ const CategoryCard = ({ category, isSelected, onSelect }) => {
           : 'bg-amber-50 text-gray-800 hover:bg-amber-100'
       }`}
     >
-      {category}
+      {category.replace(/_/g, ' ')}
     </button>
   );
 };
