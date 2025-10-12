@@ -3,12 +3,36 @@ export const WORD_CATEGORIES = {
   Food: [
     { majority: 'Pizza', minority: 'Burger' },
     { majority: 'Pasta', minority: 'Rice' },
-    { majority: 'Cake', minority: 'Pie' }
+    { majority: 'Cake', minority: 'Pie' },
+    { majority: 'Sushi', minority: 'Tacos' },
+    { majority: 'Ice Cream', minority: 'Frozen Yogurt' },
+    { majority: 'Chicken', minority: 'Turkey' },
+    { majority: 'Chocolate', minority: 'Vanilla' },
+    { majority: 'Coffee', minority: 'Tea' },
+    { majority: 'Sandwich', minority: 'Wrap' },
+    { majority: 'Soup', minority: 'Salad' },
+    { majority: 'Pizza', minority: 'Pasta' },
+    { majority: 'Burger', minority: 'Sandwich' },
+    { majority: 'Cake', minority: 'Ice Cream' },
+    { majority: 'Sushi', minority: 'Rice' },
+    { majority: 'Coffee', minority: 'Soup' }
   ],
   Fruits: [
     { majority: 'Apple', minority: 'Orange' },
     { majority: 'Banana', minority: 'Mango' },
-    { majority: 'Strawberry', minority: 'Raspberry' }
+    { majority: 'Strawberry', minority: 'Raspberry' },
+    { majority: 'Watermelon', minority: 'Cantaloupe' },
+    { majority: 'Grapes', minority: 'Blueberries' },
+    { majority: 'Pineapple', minority: 'Coconut' },
+    { majority: 'Peach', minority: 'Plum' },
+    { majority: 'Lemon', minority: 'Lime' },
+    { majority: 'Kiwi', minority: 'Papaya' },
+    { majority: 'Cherry', minority: 'Cranberry' },
+    { majority: 'Apple', minority: 'Banana' },
+    { majority: 'Orange', minority: 'Peach' },
+    { majority: 'Strawberry', minority: 'Cherry' },
+    { majority: 'Watermelon', minority: 'Pineapple' },
+    { majority: 'Grapes', minority: 'Kiwi' }
   ],
   Cities: [
     { majority: 'Madrid', minority: 'London' },
@@ -18,7 +42,12 @@ export const WORD_CATEGORIES = {
     { majority: 'Berlin', minority: 'Munich' },
     { majority: 'Rio De Janeiro', minority: 'Capetown' },
     { majority: 'Jerusalem', minority: 'Budapest' },
-    { majority: 'Sapporo', minority: 'Moscow' }
+    { majority: 'Sapporo', minority: 'Moscow' },
+    { majority: 'Madrid', minority: 'Berlin' },
+    { majority: 'Tokyo', minority: 'Hong Kong' },
+    { majority: 'New York', minority: 'Las Vegas' },
+    { majority: 'London', minority: 'Jerusalem' },
+    { majority: 'Shanghai', minority: 'Sapporo' }
   ],
   Animals: [
     { majority: 'Hippopotamus', minority: 'Elephant' },
@@ -31,13 +60,31 @@ export const WORD_CATEGORIES = {
     { majority: 'Giraffe', minority: 'Camel' },
     { majority: 'Parrot', minority: 'Toucan' },
     { majority: 'Pelican', minority: 'Puffins' },
-    { majority: 'Wolf', minority: 'Jaguar' }
+    { majority: 'Wolf', minority: 'Jaguar' },
+    { majority: 'Lion', minority: 'Wolf' },
+    { majority: 'Eagle', minority: 'Pelican' },
+    { majority: 'Elephant', minority: 'Giraffe' },
+    { majority: 'Tiger', minority: 'Jaguar' },
+    { majority: 'Panda', minority: 'Hamster' }
 
   ],
   Sports: [
     { majority: 'Soccer', minority: 'Basketball' },
     { majority: 'Tennis', minority: 'Badminton' },
-    { majority: 'Swimming', minority: 'Diving' }
+    { majority: 'Swimming', minority: 'Diving' },
+    { majority: 'Baseball', minority: 'Cricket' },
+    { majority: 'Golf', minority: 'Mini Golf' },
+    { majority: 'Boxing', minority: 'Wrestling' },
+    { majority: 'Skiing', minority: 'Snowboarding' },
+    { majority: 'Running', minority: 'Jogging' },
+    { majority: 'Volleyball', minority: 'Ping Pong' },
+    { majority: 'Hockey', minority: 'Lacrosse' },
+    { majority: 'Soccer', minority: 'Hockey' },
+    { majority: 'Basketball', minority: 'Volleyball' },
+    { majority: 'Tennis', minority: 'Ping Pong' },
+    { majority: 'Swimming', minority: 'Running' },
+    { majority: 'Baseball', minority: 'Golf' },
+    { majority: 'Boxing', minority: 'Wrestling' }
   ],
   Celebrities: [
     { majority: 'Taylor Swift', minority: 'Katy Perry' },
@@ -45,7 +92,19 @@ export const WORD_CATEGORIES = {
     { majority: 'Ariana Grande', minority: 'Dua Lipa' },
     { majority: 'Jennifer Lawrence', minority: 'Emma Stone' },
     { majority: 'Keanu Reeves', minority: 'Bruce Willis' },
-    { majority: 'Barack Obama', minority: 'Martin Luther King Jr.' }
+    { majority: 'Barack Obama', minority: 'Martin Luther King Jr.' },
+    { majority: 'Leonardo DiCaprio', minority: 'Brad Pitt' },
+    { majority: 'Beyoncé', minority: 'Rihanna' },
+    { majority: 'Will Smith', minority: 'Denzel Washington' },
+    { majority: 'Oprah Winfrey', minority: 'Ellen DeGeneres' },
+    { majority: 'Tom Cruise', minority: 'Tom Hanks' },
+    { majority: 'Lady Gaga', minority: 'Adele' },
+    { majority: 'Taylor Swift', minority: 'Beyoncé' },
+    { majority: 'Dwayne Johnson', minority: 'Will Smith' },
+    { majority: 'Leonardo DiCaprio', minority: 'Tom Cruise' },
+    { majority: 'Jennifer Lawrence', minority: 'Oprah Winfrey' },
+    { majority: 'Ariana Grande', minority: 'Lady Gaga' },
+    { majority: 'Keanu Reeves', minority: 'Brad Pitt' }
   ],
   Soccer_Players: [
     { majority: 'Neymar', minority: 'Kylian Mbappe' },
@@ -54,13 +113,36 @@ export const WORD_CATEGORIES = {
     { majority: 'Karim Benzema', minority: 'Sadio Mane' },
     { majority: 'Son Heung-min', minority: 'Omar Marmoush' },
     { majority: 'Angel Di Maria', minority: 'Mesut Ozil' },
-    { majority: 'Desire Doue', minority: 'Lamine Yamal' }
+    { majority: 'Desire Doue', minority: 'Lamine Yamal' },
+    { majority: 'Cristiano Ronaldo', minority: 'Lionel Messi' },
+    { majority: 'Erling Haaland', minority: 'Jude Bellingham' },
+    { majority: 'Kevin De Bruyne', minority: 'Mohamed Salah' },
+    { majority: 'Virgil van Dijk', minority: 'Sergio Ramos' },
+    { majority: 'Harry Kane', minority: 'Antoine Griezmann' },
+    { majority: 'Cristiano Ronaldo', minority: 'Neymar' },
+    { majority: 'Lionel Messi', minority: 'Kylian Mbappe' },
+    { majority: 'Erling Haaland', minority: 'Harry Kane' },
+    { majority: 'Kevin De Bruyne', minority: 'Luka Modric' },
+    { majority: 'Zlatan Ibrahimovic', minority: 'Karim Benzema' },
+    { majority: 'Virgil van Dijk', minority: 'Son Heung-min' }
   ],
   NBA_Players: [
     { majority: 'LeBron James', minority: 'Michael Jordan' },
     { majority: 'Stephen Curry', minority: 'Klay Thompson' },
     { majority: 'Giannis Antetokounmpo', minority: 'Kawhi Leonard' },
-    { majority: 'Luka Doncic', minority: 'Trae Young' }
+    { majority: 'Luka Doncic', minority: 'Trae Young' },
+    { majority: 'Kevin Durant', minority: 'Kyrie Irving' },
+    { majority: 'Nikola Jokic', minority: 'Joel Embiid' },
+    { majority: 'Jayson Tatum', minority: 'Jaylen Brown' },
+    { majority: 'Anthony Davis', minority: 'Rudy Gobert' },
+    { majority: 'Damian Lillard', minority: 'Chris Paul' },
+    { majority: 'Jimmy Butler', minority: 'Paul George' },
+    { majority: 'LeBron James', minority: 'Stephen Curry' },
+    { majority: 'Michael Jordan', minority: 'Kobe Bryant' },
+    { majority: 'Giannis Antetokounmpo', minority: 'Luka Doncic' },
+    { majority: 'Kevin Durant', minority: 'Anthony Davis' },
+    { majority: 'Nikola Jokic', minority: 'Damian Lillard' },
+    { majority: 'Jayson Tatum', minority: 'Jimmy Butler' }
   ],
   Mythical_Creatures: [
     { majority: 'Dragon', minority: 'Unicorn' },
@@ -70,6 +152,38 @@ export const WORD_CATEGORIES = {
     { majority: 'Goblin', minority: 'Troll' },
     { majority: 'Hydra', minority: 'Sphinx' },
     { majority: 'Yeti', minority: 'Minotaur' },
-    { majority: 'Mermaid', minority: 'Werewolf' }
+    { majority: 'Mermaid', minority: 'Werewolf' },
+    { majority: 'Dragon', minority: 'Phoenix' },
+    { majority: 'Unicorn', minority: 'Fairy' },
+    { majority: 'Griffin', minority: 'Hydra' },
+    { majority: 'Centaur', minority: 'Yeti' },
+    { majority: 'Goblin', minority: 'Minotaur' },
+    { majority: 'Sphinx', minority: 'Werewolf' }
+  ],
+  Animation_Characters: [
+    { majority: 'Mickey Mouse', minority: 'Donald Duck' },
+    { majority: 'Pikachu', minority: 'Charizard' },
+    { majority: 'Homer Simpson', minority: 'Bart Simpson' },
+    { majority: 'Hello Kitty', minority: 'My Melody' },
+    { majority: 'Jake from Adventure Time', minority: 'Finn from Adventure Time' },
+    { majority: 'Blossom', minority: 'Buttercup' },
+    { majority: 'Timmy Turner', minority: 'Cosmo' },
+    { majority: 'SpongeBob', minority: 'Patrick Star' },
+    { majority: 'Bugs Bunny', minority: 'Daffy Duck' },
+    { majority: 'Tom', minority: 'Jerry' },
+    { majority: 'Scooby-Doo', minority: 'Shaggy' },
+    { majority: 'Garfield', minority: 'Winnie the Pooh' },
+    { majority: 'Elsa', minority: 'Anna' },
+    { majority: 'Woody', minority: 'Buzz Lightyear' },
+    { majority: 'Naruto', minority: 'Sasuke' },
+    { majority: 'Goku', minority: 'Vegeta' },
+    { majority: 'Mario', minority: 'Luigi' },
+    { majority: 'Sonic', minority: 'Flash' },
+    { majority: 'Mickey Mouse', minority: 'Bugs Bunny' },
+    { majority: 'Pikachu', minority: 'Sonic' },
+    { majority: 'SpongeBob', minority: 'Garfield' },
+    { majority: 'Goku', minority: 'Naruto' },
+    { majority: 'Elsa', minority: 'Hello Kitty' },
+    { majority: 'Mario', minority: 'Woody' }
   ]
 };
