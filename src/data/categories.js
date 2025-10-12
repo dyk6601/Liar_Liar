@@ -32,6 +32,27 @@ export const WORD_CATEGORIES = {
     { majority: 'Sushi', minority: 'Chocolate' },
     { majority: 'Ice Cream', minority: 'Cake' }
   ],
+  Fast_Food: [
+    { majority: 'McDonald\'s', minority: 'Burger King' },
+    { majority: 'KFC', minority: 'Popeyes' },
+    { majority: 'Subway', minority: 'Jimmy Johns' },
+    { majority: 'Pizza Hut', minority: 'Domino\'s' },
+    { majority: 'Taco Bell', minority: 'Chipotle' },
+    { majority: 'Wendy\'s', minority: 'In-N-Out' },
+    { majority: 'Starbucks', minority: 'Dunkin\'' },
+    { majority: 'Chick-fil-A', minority: 'Raising Cane\'s' },
+    { majority: 'Five Guys', minority: 'Shake Shack' },
+    { majority: 'Panda Express', minority: 'Pick Up Stix' },
+    { majority: 'Burger King', minority: 'Wendy\'s' },
+    { majority: 'Popeyes', minority: 'Subway' },
+    { majority: 'Jimmy Johns', minority: 'Pizza Hut' },
+    { majority: 'Domino\'s', minority: 'Taco Bell' },
+    { majority: 'Chipotle', minority: 'McDonald\'s' },
+    { majority: 'In-N-Out', minority: 'KFC' },
+    { majority: 'Dunkin\'', minority: 'Chick-fil-A' },
+    { majority: 'Raising Cane\'s', minority: 'Five Guys' },
+    { majority: 'Shake Shack', minority: 'Panda Express' }
+  ],
   Fruits: [
     { majority: 'Apple', minority: 'Orange' },
     { majority: 'Banana', minority: 'Mango' },
@@ -286,5 +307,6 @@ export const WORD_CATEGORIES = {
     { majority: 'Totoro', minority: 'Po (Kung Fu Panda)' },
     { majority: 'Dora', minority: 'Boots' },
     { majority: 'Patrick Star', minority: 'Daffy Duck' },
-  ]
+  ],
+
 };
