@@ -21,10 +21,19 @@ const LobbyPage = ({ roomCode, players, isHost, onReady, onCopyCode, copied, onL
     <div className="min-h-screen bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-400 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full mx-auto bg-amber-50 rounded-3xl shadow-2xl border-4 border-gray-800 p-8">
         
-        {/* Icon */}
+        {/* Yappie on Chair Image */}
         <div className="mb-6 flex justify-center">
-          <div className="w-20 h-20 bg-amber-100 rounded-3xl flex items-center justify-center shadow-lg border-4 border-gray-800">
-            <span className="text-3xl">🏠</span>
+          <div className="w-20 h-20 bg-amber-100 rounded-3xl flex items-center justify-center shadow-lg border-4 border-gray-800 overflow-hidden">
+            <img 
+              src="/img/yappie_on_chair.png" 
+              alt="Yappie on Chair"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // Fallback to home emoji if image fails to load
+                e.target.style.display = 'none';
+                e.target.parentElement.innerHTML = '<span class="text-3xl">🏠</span>';
+              }}
+            />
           </div>
         </div>
 
