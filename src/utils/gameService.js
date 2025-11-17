@@ -621,6 +621,122 @@ const gameService = {
     } catch (error) {
       return false;
     }
+  },
+
+  // ==========================================
+  // FEEDBACK SYSTEM
+  // ==========================================
+  
+  /**
+   * Submit feedback for a word combination
+   * @param {string} roomId - The room ID
+   * @param {string} category - The word category
+   * @param {string} majorityWord - The majority word in the combination
+   * @param {string} minorityWord - The minority word in the combination
+   * @param {string} feedbackType - 'upvote' or 'downvote'
+   */
+  async submitWordFeedback({
+    roomId,
+    category,
+    majorityWord,
+    minorityWord,
+    feedbackType
+  }) {
+    try {
+      console.log('📝 Submitting word feedback:', {
+        roomId,
+        category,
+        majorityWord,
+        minorityWord,
+        feedbackType
+      });
+
+      // Use the database function to increment the appropriate counter
+      const { error } = await supabase.rpc('increment_word_feedback', {
+        p_room_id: roomId,
+        p_category: category,
+        p_majority_word: majorityWord,
+        p_minority_word: minorityWord,
+        p_feedback_type: feedbackType
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      console.log('✅ Feedback submitted successfully');
+      return { success: true };
+
+    } catch (error) {
+      console.error('❌ Error submitting feedback:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get feedback statistics for word combinations
+   * @param {string} category - Optional category filter
+   * @param {number} limit - Number of results to return
+   */
+  async getWordFeedbackStats(category = null, limit = 50) {
+    try {
+      let query = supabase.rpc('get_word_combination_stats', { 
+        p_limit: limit 
+      });
+
+      if (category) {
+        query = supabase.rpc('get_word_combination_stats', { 
+          p_category: category,
+          p_limit: limit 
+        });
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+
+      console.log('📊 Feedback stats retrieved:', data);
+      return data;
+
+    } catch (error) {
+      console.error('❌ Error fetching feedback stats:', error);
+      throw error;
+    }
+  },
+
+
+
+  /**
+   * Find the word combination that matches the player's word
+   * @param {string} category - The category to search in
+   * @param {string} playerWord - The word the player received
+   * @param {object} wordCategories - The WORD_CATEGORIES object
+   */
+  findWordCombination(category, playerWord, wordCategories) {
+    try {
+      const categoryWords = wordCategories[category] || [];
+      
+      for (const combination of categoryWords) {
+        if (combination.majority === playerWord) {
+          return {
+            majorityWord: combination.majority,
+            minorityWord: combination.minority
+          };
+        }
+        if (combination.minority === playerWord) {
+          return {
+            majorityWord: combination.majority,
+            minorityWord: combination.minority
+          };
+        }
+      }
+      
+      return null;
+      
+    } catch (error) {
+      console.error('❌ Error finding word combination:', error);
+      return null;
+    }
   }
 };
 

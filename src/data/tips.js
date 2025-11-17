@@ -3,7 +3,6 @@
 // Keep these concise; consider translations or A/B variants later.
 
 const TIPS = [
-  "Use specific, single-word clues to avoid ambiguity.",
   "Avoid mentioning words that are too close to the secret word.",
   "When guessing, listen for patterns in the clues across players.",
   "If you're the liar, stay consistent with the group's topic to avoid suspicion.",
@@ -11,7 +10,8 @@ const TIPS = [
   "Watch body language and hesitation when others speak.",
   "Tie your clues to common experiences (e.g., 'kitchen', 'travel') to narrow options.",
   "Rotate who gives the clue first each round",
-  "Play the man not odds"
+  "Play the man not odds",
+  "Agree with others tricking others that you are not the lair"
 ];
 
 export default TIPS;

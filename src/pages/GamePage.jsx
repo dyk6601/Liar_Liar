@@ -8,20 +8,65 @@ import React, { useState } from 'react';
 import WordRevealer from '../components/WordRevealer.jsx';
 import Button from '../components/button.jsx';
 import Tips from '../components/Tips.jsx';
+import gameService from '../utils/gameService.js';
+import { WORD_CATEGORIES } from '../data/categories.js';
 
-const GamePage = ({ userWord, wordRevealed, onToggleWord, isHost, onPlayAgain, onExitGame, selectedCategory }) => {
+const GamePage = ({ userWord, wordRevealed, onToggleWord, isHost, onPlayAgain, onExitGame, selectedCategory, playerId, roomId }) => {
   const [feedback, setFeedback] = useState(null); // 'upvote', 'downvote', or null
   const [showThanks, setShowThanks] = useState(false);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
 
-  const handleFeedback = (type) => {
-    setFeedback(type);
-    setShowThanks(true);
+  const handleFeedback = async (type) => {
+    // Prevent duplicate submissions
+    if (feedback !== null || feedbackLoading) return;
     
-    // Hide thanks message after 2 seconds
-    setTimeout(() => setShowThanks(false), 2000);
+    setFeedbackLoading(true);
     
-    // TODO: Send feedback to backend
-    console.log(`Feedback: ${type} for word "${userWord}" in category "${selectedCategory}"`);
+    try {
+      // Find the word combination for this player's word
+      const combination = gameService.findWordCombination(selectedCategory, userWord, WORD_CATEGORIES);
+      
+      if (!combination) {
+        console.error('❌ Could not find word combination for feedback');
+        alert('Unable to submit feedback - word combination not found');
+        return;
+      }
+
+      // Submit feedback to backend
+      await gameService.submitWordFeedback({
+        roomId,
+        category: selectedCategory,
+        majorityWord: combination.majorityWord,
+        minorityWord: combination.minorityWord,
+        feedbackType: type
+      });
+
+      // Update UI state
+      setFeedback(type);
+      setShowThanks(true);
+      
+      // Hide thanks message after 3 seconds
+      setTimeout(() => setShowThanks(false), 3000);
+      
+      console.log(`✅ Feedback submitted: ${type} for "${userWord}" (${combination.majorityWord} vs ${combination.minorityWord})`);
+      
+    } catch (error) {
+      console.error('❌ Error submitting feedback:', error);
+      
+      // Show more specific error information
+      let errorMessage = 'Failed to submit feedback. ';
+      if (error.message) {
+        errorMessage += error.message;
+      } else if (error.code) {
+        errorMessage += `Error code: ${error.code}`;
+      } else {
+        errorMessage += 'Please check console for details.';
+      }
+      
+      alert(errorMessage);
+    } finally {
+      setFeedbackLoading(false);
+    }
   };
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-400 flex items-center justify-center p-4">
@@ -36,46 +81,54 @@ const GamePage = ({ userWord, wordRevealed, onToggleWord, isHost, onPlayAgain, o
         <WordRevealer word={userWord} isRevealed={wordRevealed} onToggle={onToggleWord} />
 
         {/* Feedback Section - Only show when word is actually revealed and has content */}
-        {wordRevealed && userWord && (
+        {wordRevealed && userWord && userWord !== 'LIAR!' && (
           <div className="text-center mb-4">
             {showThanks ? (
-              <p className="text-sm text-gray-600 font-medium animate-pulse">Thanks for your feedback!</p>
+              <div className="text-center">
+                <p className="text-sm text-gray-600 font-medium animate-pulse">✨ Thanks for your feedback!</p>
+                <p className="text-xs text-gray-500 mt-1">Your rating helps improve the game</p>
+              </div>
+            ) : feedbackLoading ? (
+              <p className="text-sm text-gray-600 font-medium">Submitting feedback...</p>
+            ) : feedback ? (
+              <div className="text-center">
+                <p className="text-sm text-gray-600 font-medium">
+                  {feedback === 'upvote' ? '👍 You liked this combination' : 
+                   feedback === 'downvote' ? '👎 You didn\'t like this combination' :
+                   '✓ Feedback already submitted'}
+                </p>
+              </div>
             ) : (
-              <div className="flex justify-center items-center gap-4">
-                <button
-                  onClick={() => handleFeedback('upvote')}
-                  className={`w-8 h-8 rounded-full border-2 border-gray-800 transition-all hover:scale-110 active:scale-95 flex items-center justify-center ${
-                    feedback === 'upvote' 
-                      ? 'bg-green-500 border-green-500' 
-                      : 'bg-white hover:bg-gray-100'
-                  }`}
-                  disabled={feedback !== null}
-                >
-                  <svg 
-                    className={`w-4 h-4 ${feedback === 'upvote' ? 'text-white' : 'text-gray-800'}`} 
-                    fill="currentColor" 
-                    viewBox="0 0 20 20"
+              <div>
+                <p className="text-xs text-gray-500 mb-2">Rate this word combination:</p>
+                <div className="flex justify-center items-center gap-4">
+                  <button
+                    onClick={() => handleFeedback('upvote')}
+                    className="w-8 h-8 rounded-full border-2 border-gray-800 transition-all hover:scale-110 active:scale-95 flex items-center justify-center bg-white hover:bg-gray-100"
+                    disabled={feedbackLoading}
                   >
-                    <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => handleFeedback('downvote')}
-                  className={`w-8 h-8 rounded-full border-2 border-gray-800 transition-all hover:scale-110 active:scale-95 flex items-center justify-center ${
-                    feedback === 'downvote' 
-                      ? 'bg-red-500 border-red-500' 
-                      : 'bg-white hover:bg-gray-100'
-                  }`}
-                  disabled={feedback !== null}
-                >
-                  <svg 
-                    className={`w-4 h-4 transform rotate-180 ${feedback === 'downvote' ? 'text-white' : 'text-gray-800'}`} 
-                    fill="currentColor" 
-                    viewBox="0 0 20 20"
+                    <svg 
+                      className="w-4 h-4 text-gray-800" 
+                      fill="currentColor" 
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleFeedback('downvote')}
+                    className="w-8 h-8 rounded-full border-2 border-gray-800 transition-all hover:scale-110 active:scale-95 flex items-center justify-center bg-white hover:bg-gray-100"
+                    disabled={feedbackLoading}
                   >
-                    <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                  </svg>
-                </button>
+                    <svg 
+                      className="w-4 h-4 transform rotate-180 text-gray-800" 
+                      fill="currentColor" 
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             )}
           </div>

@@ -595,6 +595,8 @@ export default function LiarWordGame() {
           isHost={isHost}
           onPlayAgain={handlePlayAgain}
           onExitGame={handleExitGame}
+          playerId={playerId}
+          roomId={roomId}
         />
       )}
     </>
