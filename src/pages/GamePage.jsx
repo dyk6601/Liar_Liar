@@ -154,7 +154,7 @@ const GamePage = ({ userWord, wordRevealed, onToggleWord, isHost, onPlayAgain, o
           <Button 
             onClick={onExitGame} 
             variant="secondary" 
-            className="w-full md:w-64 text-lg py-4 bg-white hover:bg-gray-100 text-black font-bold rounded-2xl shadow-lg border-4 border-gray-800 transition-transform hover:scale-105 active:scale-95"
+            className="w-full text-lg py-4 bg-white hover:bg-gray-100 text-black font-bold rounded-2xl shadow-lg border-4 border-gray-800 transition-transform hover:scale-105 active:scale-95"
           >
             Exit Game
           </Button>
