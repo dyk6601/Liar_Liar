@@ -3,9 +3,12 @@
 import React from 'react';
 
 const QRCodeComponent = ({ roomCode }) => {
-  const gameLink = `${window.location.origin}?room=${roomCode}`;
+  // Use full current URL as base, then add room parameter
+  const baseUrl = window.location.origin + window.location.pathname;
+  const gameLink = `${baseUrl}?room=${roomCode}`;
   
-  // Option 1: Use a working QR code service with proper CORS
+  console.log('🔗 QR Code URL:', gameLink); // Debug log
+  
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(gameLink)}`;
   
   return (
@@ -17,12 +20,13 @@ const QRCodeComponent = ({ roomCode }) => {
           alt="QR Code to join game"
           className="w-32 h-32"
           onError={(e) => {
-            // Fallback if QR code fails
             e.target.style.display = 'none';
             e.target.parentElement.innerHTML = '<p class="text-gray-800 w-32 h-32 flex items-center justify-center text-center text-xs font-bold">QR Code<br/>Unavailable</p>';
           }}
         />
       </div>
+      {/* Show the URL for debugging */}
+      <p className="text-xs text-gray-600 mt-2 break-all">{gameLink}</p>
     </div>
   );
 };
