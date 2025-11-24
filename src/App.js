@@ -391,7 +391,7 @@ export default function LiarWordGame() {
       setSelectedCategory('');
       setUserWord('');
       setWordRevealed(false);
-      setPage('category');
+      setPage('lobby'); // ✅ CHANGED: from 'category' to 'lobby'
       
       console.log('✅ Game reset successfully');
       
@@ -526,7 +526,7 @@ export default function LiarWordGame() {
     };
   }, [playerId, roomId, userWord, selectedCategory, page, hasExitedIntentionally]);
 
-  // ✅ NEW: Cleanup on unmount
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (realtimeChannelRef.current) {

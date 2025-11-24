@@ -14,7 +14,7 @@ const QRCodeComponent = ({ roomCode, code }) => {
   const baseUrl = window.location.origin + window.location.pathname;
   const gameLink = `${baseUrl}?room=${room}`;
   
-  console.log('🔗 QR Code URL:', gameLink);
+  console.log('QR Code URL:', gameLink);
   
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(gameLink)}`;
   
