@@ -550,7 +550,7 @@ export default function LiarWordGame() {
       {page === 'home' && (
         <>
           <HomePage onStartNewGame={handleStartNewGame} onJoinGame={handleJoinGame} />
-          <RulesModal isOpen={showRulesModal} onClose={() => setShowRulesModal(false)} />
+          {/* <RulesModal isOpen={showRulesModal} onClose={() => setShowRulesModal(false)} /> */}
           <NicknameModal
             isOpen={showNicknameModal}
             onClose={() => setShowNicknameModal(false)}
