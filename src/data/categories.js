@@ -308,5 +308,17 @@ export const WORD_CATEGORIES = {
     { majority: 'Dora', minority: 'Boots' },
     { majority: 'Patrick Star', minority: 'Daffy Duck' },
   ],
-
+  KIS_people: [
+    { majority: 'Joon Lee', minority: 'Dilon Park' },
+    { majority: 'Jiwoo Baik', minority: 'Stella Han' },
+    { majority: 'Sihun Choi', minority: 'Derek Kim' },
+    { majority: 'Chris Dhong', minority: 'Andrew Park' },
+    { majority: 'Chris Park', minority: 'Jonathan Kim' },
+    { majority: 'Julia Jang', minority: 'Yena Ahn' },
+    { majority: 'Jaemin Yoo', minority: 'Matthew Lee' },
+    { majority: 'Max Yoon', minority: 'Youngsang Ryu' },
+    { majority: 'Muchang Bang', minority: 'Issac Kim' },
+    { majority: 'Duke Moon', minority: 'Jared Son' },
+    { majority: 'Angelar Park', minority: 'Hope Yoon' },
+  ]
 };
