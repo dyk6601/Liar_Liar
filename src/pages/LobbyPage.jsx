@@ -39,7 +39,7 @@ const LobbyPage = ({ roomCode, players, isHost, onReady, onCopyCode, copied, onL
 
 
         <RoomCode code={roomCode} onCopy={onCopyCode} copied={copied} />
-        <QRCode code={roomCode} />
+        <QRCode roomCode={roomCode} /> {/* ✅ Changed 'code' to 'roomCode' */}
 
         {isHost && (
           <>

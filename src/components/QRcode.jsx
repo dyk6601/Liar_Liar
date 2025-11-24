@@ -2,12 +2,19 @@
 // Fixed version using qrcode.react library
 import React from 'react';
 
-const QRCodeComponent = ({ roomCode }) => {
-  // Use full current URL as base, then add room parameter
-  const baseUrl = window.location.origin + window.location.pathname;
-  const gameLink = `${baseUrl}?room=${roomCode}`;
+const QRCodeComponent = ({ roomCode, code }) => {
+  // Accept either 'roomCode' or 'code' prop
+  const room = roomCode || code;
   
-  console.log('🔗 QR Code URL:', gameLink); // Debug log
+  if (!room) {
+    console.error('❌ QRCode: No room code provided!');
+    return null;
+  }
+  
+  const baseUrl = window.location.origin + window.location.pathname;
+  const gameLink = `${baseUrl}?room=${room}`;
+  
+  console.log('🔗 QR Code URL:', gameLink);
   
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(gameLink)}`;
   
