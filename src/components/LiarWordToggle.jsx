@@ -1,6 +1,6 @@
 import React from 'react';
 
-// components/LiarWordToggle.jsx
+
 // Toggle for host to choose between minority word vs "LIAR!" for liars
 // Props:
 //  - useLiarWord: boolean - true = use "LIAR!", false = use minority word

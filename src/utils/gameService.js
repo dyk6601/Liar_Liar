@@ -109,7 +109,7 @@ const gameService = {
       }
       
       // Add player to room
-      console.log('➕ Adding player to room...');
+      console.log('+ Adding player to room...');
       const { data: player, error: playerError } = await supabase
         .from('players')
         .insert([{
@@ -142,7 +142,7 @@ const gameService = {
   },
   
   // ==========================================
-  // 3. START GAME (Select Category & Assign Words)
+  // 3. START GAME 
   // ==========================================
   async startGame(roomId, category, wordCategories, useLiarWord = false) {
     try {
@@ -159,7 +159,7 @@ const gameService = {
         throw new Error('Need at least 1 player to start');
       }
       
-      // Shuffle players array to ensure true randomness (Fisher-Yates shuffle)
+      // Shuffle players array to ensure randomness (Fisher-Yates shuffle)
       const shuffledPlayers = [...players];
       for (let i = shuffledPlayers.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));

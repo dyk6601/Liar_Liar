@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setPlayers, addPlayer, updatePlayer, removePlayer, clearPlayers } from './store';
+import { setPlayers, addPlayer, updatePlayer, removePlayer, clearPlayers } from './store/store';  // Changed
 
 // Import gameService for Supabase integration
 import gameService from './utils/gameService';

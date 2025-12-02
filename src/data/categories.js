@@ -1,5 +1,6 @@
 export const WORD_CATEGORIES = {
   Random: [], // Will be populated dynamically from all other categories
+              // Logic in gameService.js
   Food: [
     { majority: 'Pizza', minority: 'Burger' },
     { majority: 'Pasta', minority: 'Rice' },

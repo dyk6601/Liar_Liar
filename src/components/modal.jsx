@@ -1,7 +1,7 @@
 import React from 'react';
 import { XIcon } from './icons.jsx';
 
-// components/Modal.jsx
+
 // Lightweight modal used across the app. This component provides a simple
 // centered overlay and content container. It intentionally keeps styling
 // conservative so pages can opt into Tailwind classes or fallback CSS.
@@ -11,6 +11,7 @@ import { XIcon } from './icons.jsx';
 //  - title: string (optional)
 //  - showClose: boolean (optional)
 //  - children: modal content
+
 const Modal = ({ isOpen, onClose, children, title, showClose = true }) => {
   if (!isOpen) return null;
   
