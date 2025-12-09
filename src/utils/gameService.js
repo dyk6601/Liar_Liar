@@ -96,7 +96,7 @@ const gameService = {
       
       if (countError) throw countError;
       
-      console.log('📊 Existing players:', existingPlayers);
+      console.log('Existing players:', existingPlayers);
       
       if (existingPlayers.length >= room.max_players) {
         throw new Error('Room is full');
@@ -175,7 +175,7 @@ const gameService = {
         const availableCategories = Object.keys(wordCategories).filter(cat => cat !== 'Random');
         actualCategory = availableCategories[Math.floor(Math.random() * availableCategories.length)];
         categoryWords = wordCategories[actualCategory];
-        console.log('🎲 Random category selected:', actualCategory);
+        console.log('Random category selected:', actualCategory);
       } else {
         categoryWords = wordCategories[category];
       }
@@ -230,8 +230,8 @@ const gameService = {
           .eq('id', player.id);
       }
       
-      console.log('✅ Game started with category:', actualCategory);
-      console.log('✅ Liar selected:', liarPlayer.nickname, '(was host:', liarPlayer.is_host ? 'yes' : 'no', ')');
+      console.log('Game started with category:', actualCategory);
+      console.log('Liar selected:', liarPlayer.nickname, '(was host:', liarPlayer.is_host ? 'yes' : 'no', ')');
       
       return {
         category: actualCategory,
@@ -301,8 +301,8 @@ const gameService = {
   // 5. REAL-TIME SUBSCRIPTIONS
   // ==========================================
   subscribeToRoom(roomId, callbacks = {}) {
-    console.log('🔔 gameService.subscribeToRoom called for room:', roomId);
-    console.log('🔔 Callbacks provided:', Object.keys(callbacks));
+    console.log('gameService.subscribeToRoom called for room:', roomId);
+    console.log('Callbacks provided:', Object.keys(callbacks));
     
     const channel = supabase.channel(`room:${roomId}`, {
       config: {
@@ -317,9 +317,7 @@ const gameService = {
       'postgres_changes',
       { event: 'INSERT', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
       (payload) => {
-        console.log('🔔 ========================================');
-        console.log('🔔 RAW Player INSERT payload:', JSON.stringify(payload, null, 2));
-        console.log('🔔 ========================================');
+        console.log('RAW Player INSERT payload:', JSON.stringify(payload, null, 2));
         
         // Normalize payload shape for consumers (some clients use `record`, others `new`)
         const normalized = {
@@ -329,14 +327,14 @@ const gameService = {
           raw: payload
         };
         
-        console.log('🔔 Player INSERT (normalized):', normalized);
-        console.log('🔔 Calling onPlayerChange callback...');
+        console.log('Player INSERT (normalized):', normalized);
+        console.log('Calling onPlayerChange callback...');
         
         if (callbacks.onPlayerChange) {
           callbacks.onPlayerChange(normalized);
           console.log('✅ onPlayerChange callback executed');
         } else {
-          console.warn('⚠️ No onPlayerChange callback provided!');
+          console.warn('No onPlayerChange callback provided!');
         }
       }
     );
@@ -346,7 +344,7 @@ const gameService = {
       'postgres_changes',
       { event: 'UPDATE', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
       (payload) => {
-        console.log('🔔 Player UPDATE payload:', payload);
+        console.log(' Player UPDATE payload:', payload);
         
         // Normalize payload shape for consumers
         const normalized = {
@@ -356,7 +354,7 @@ const gameService = {
           raw: payload
         };
         
-        console.log('🔔 Player UPDATE (normalized):', normalized);
+        console.log(' Player UPDATE (normalized):', normalized);
         if (callbacks.onPlayerChange) {
           callbacks.onPlayerChange(normalized);
         }
@@ -368,7 +366,7 @@ const gameService = {
       'postgres_changes',
       { event: 'DELETE', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}` },
       (payload) => {
-        console.log('🔔 Player DELETE payload:', payload);
+        console.log(' Player DELETE payload:', payload);
         
         // Normalize payload shape for consumers
         const normalized = {
@@ -378,7 +376,7 @@ const gameService = {
           raw: payload
         };
         
-        console.log('🔔 Player DELETE (normalized):', normalized);
+        console.log(' Player DELETE (normalized):', normalized);
         if (callbacks.onPlayerChange) {
           callbacks.onPlayerChange(normalized);
         }
@@ -390,7 +388,7 @@ const gameService = {
       'postgres_changes',
       { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}` },
       (payload) => {
-        console.log('🔔 Room update:', payload);
+        console.log('Room update:', payload);
         if (callbacks.onRoomUpdate) {
           callbacks.onRoomUpdate(payload);
         }
@@ -399,12 +397,12 @@ const gameService = {
 
     // Subscribe to the channel
     channel.subscribe((status, err) => {
-      console.log('🔔 Subscription status:', status);
+      console.log('Subscription status:', status);
       if (err) {
         console.error('❌ Subscription error:', err);
       }
       if (status === 'SUBSCRIBED') {
-        console.log('✅ Successfully subscribed to real-time updates for room:', roomId);
+        console.log('✅ Successfully subscribed to real-time updates:', roomId);
       }
       if (status === 'CHANNEL_ERROR') {
         console.error('❌ Channel error occurred');
@@ -414,8 +412,8 @@ const gameService = {
       }
     });
 
-    console.log('🔔 Channel object:', channel);
-    console.log('🔔 Channel state:', channel.state);
+    console.log('Channel object:', channel);
+    console.log('Channel state:', channel.state);
 
     return channel;
   },
